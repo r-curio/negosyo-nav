@@ -49,7 +49,7 @@ export default function PostDetail() {
   const { data: comments, refetch: refetchComments } =
     trpc.community.comments.useQuery({ postId }, { enabled: !!postId });
 
-  const { data: myVotesData } = trpc.community.myVotes.useQuery(undefined, {
+  const { data: myVotesData, refetch: refetchMyVotes } = trpc.community.myVotes.useQuery(undefined, {
     enabled: isAuthenticated,
   });
   const myVote = useMemo(
@@ -57,7 +57,12 @@ export default function PostDetail() {
     [myVotesData, postId]
   );
 
-  const voteMutation = trpc.community.vote.useMutation({ onSuccess: () => refetchPosts() });
+  const voteMutation = trpc.community.vote.useMutation({
+    onSuccess: () => {
+      refetchPosts();
+      refetchMyVotes();
+    },
+  });
   const addComment = trpc.community.addComment.useMutation({
     onSuccess: () => {
       setBody("");
@@ -142,16 +147,20 @@ export default function PostDetail() {
           <div className="flex items-center gap-4 pt-2 border-t border-border/50">
             <button
               onClick={() => handleVote("up")}
-              className={`flex items-center gap-1 text-xs ${myVote === "up" ? "text-teal" : "text-muted-foreground hover:text-teal"}`}
+              className={`flex items-center gap-1 text-sm transition-colors ${
+                myVote === "up" ? "text-primary font-semibold" : "text-muted-foreground hover:text-primary"
+              }`}
             >
-              <ThumbsUp className="w-3.5 h-3.5" />
+              <ThumbsUp className="w-4 h-4" fill={myVote === "up" ? "currentColor" : "none"} />
               <span className="font-[var(--font-mono)]">{post.upvotes}</span>
             </button>
             <button
               onClick={() => handleVote("down")}
-              className={`flex items-center gap-1 text-xs ${myVote === "down" ? "text-red-500" : "text-muted-foreground hover:text-red-500"}`}
+              className={`flex items-center gap-1 text-sm transition-colors ${
+                myVote === "down" ? "text-destructive font-semibold" : "text-muted-foreground hover:text-destructive"
+              }`}
             >
-              <ThumbsDown className="w-3.5 h-3.5" />
+              <ThumbsDown className="w-4 h-4" fill={myVote === "down" ? "currentColor" : "none"} />
               <span className="font-[var(--font-mono)]">{post.downvotes}</span>
             </button>
           </div>

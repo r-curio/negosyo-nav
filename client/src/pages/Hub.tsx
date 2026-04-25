@@ -87,10 +87,14 @@ export default function Hub() {
       setNewStepNumber("");
     },
   });
-  const voteMutation = trpc.community.vote.useMutation({ onSuccess: () => refetch() });
-
-  const { data: myVotesData } = trpc.community.myVotes.useQuery(undefined, {
+  const { data: myVotesData, refetch: refetchMyVotes } = trpc.community.myVotes.useQuery(undefined, {
     enabled: isAuthenticated,
+  });
+  const voteMutation = trpc.community.vote.useMutation({
+    onSuccess: () => {
+      refetch();
+      refetchMyVotes();
+    },
   });
   const myVoteByPost = useMemo(() => {
     const m = new Map<string, "up" | "down">();
@@ -249,24 +253,37 @@ export default function Hub() {
 
                 {/* Vote section */}
                 <div className="px-4 py-2 border-t border-border/50 flex items-center gap-4">
-                  <button
-                    onClick={() => handleVote(post.id, "up")}
-                    className={`flex items-center gap-1 text-xs transition-colors ${
-                      myVoteByPost.get(post.id) === "up" ? "text-teal" : "text-muted-foreground hover:text-teal"
-                    }`}
-                  >
-                    <ThumbsUp className="w-3.5 h-3.5" />
-                    <span className="font-[var(--font-mono)]">{post.upvotes}</span>
-                  </button>
-                  <button
-                    onClick={() => handleVote(post.id, "down")}
-                    className={`flex items-center gap-1 text-xs transition-colors ${
-                      myVoteByPost.get(post.id) === "down" ? "text-red-500" : "text-muted-foreground hover:text-red-500"
-                    }`}
-                  >
-                    <ThumbsDown className="w-3.5 h-3.5" />
-                    <span className="font-[var(--font-mono)]">{post.downvotes}</span>
-                  </button>
+                  {(() => {
+                    const myVote = myVoteByPost.get(post.id);
+                    return (
+                      <>
+                        <button
+                          onClick={() => handleVote(post.id, "up")}
+                          className={`flex items-center gap-1 text-xs transition-colors ${
+                            myVote === "up" ? "text-primary font-semibold" : "text-muted-foreground hover:text-primary"
+                          }`}
+                        >
+                          <ThumbsUp
+                            className="w-4 h-4"
+                            fill={myVote === "up" ? "currentColor" : "none"}
+                          />
+                          <span className="font-[var(--font-mono)]">{post.upvotes}</span>
+                        </button>
+                        <button
+                          onClick={() => handleVote(post.id, "down")}
+                          className={`flex items-center gap-1 text-xs transition-colors ${
+                            myVote === "down" ? "text-destructive font-semibold" : "text-muted-foreground hover:text-destructive"
+                          }`}
+                        >
+                          <ThumbsDown
+                            className="w-4 h-4"
+                            fill={myVote === "down" ? "currentColor" : "none"}
+                          />
+                          <span className="font-[var(--font-mono)]">{post.downvotes}</span>
+                        </button>
+                      </>
+                    );
+                  })()}
                   <button
                     onClick={() => navigate(`/hub/${post.id}`)}
                     className="flex items-center gap-1 text-xs text-muted-foreground hover:text-earth-brown transition-colors ml-auto"
