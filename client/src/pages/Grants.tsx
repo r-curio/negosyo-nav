@@ -46,16 +46,16 @@ export default function Grants() {
           >
             <ArrowLeft className="w-5 h-5 text-foreground" />
           </button>
-          <div className="flex-1">
-            <h1 className="font-bold text-base text-foreground"
+          <div className="flex-1 min-w-0">
+            <h1 className="font-bold text-base text-foreground truncate"
               style={{ fontFamily: "var(--font-display)" }}>
               Grant & Livelihood Matching
             </h1>
-            <p className="text-xs text-muted-foreground">Auto-matched based on your profile</p>
+            <p className="text-xs text-muted-foreground truncate">Auto-matched based on your profile</p>
           </div>
           {/* Amber badge for eligible count — Design.md: amber = grants */}
           {eligibleCount > 0 && (
-            <span className="text-sm font-bold text-mango bg-mango-light border border-mango/30 px-3 py-1.5 rounded-full">
+            <span className="shrink-0 whitespace-nowrap text-sm font-bold text-mango bg-mango-light border border-mango/30 px-3 py-1.5 rounded-full">
               {eligibleCount} eligible
             </span>
           )}
@@ -220,17 +220,6 @@ export default function Grants() {
             );
           })
         )}
-
-        {/* Back nav */}
-        <div className="flex justify-center pt-4">
-          <Button
-            onClick={() => navigate("/roadmap")}
-            variant="outline"
-            className="rounded-xl border-border text-muted-foreground hover:bg-muted min-h-[48px] px-6"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />Bumalik sa Roadmap
-          </Button>
-        </div>
       </div>
 
       <ChatFab />
