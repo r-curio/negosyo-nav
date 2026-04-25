@@ -236,10 +236,11 @@ export async function getCommunityPosts(
   let q: FirebaseFirestore.Query = db().collection("community_posts");
   if (lguTag) q = q.where("lguTag", "==", lguTag);
   if (typeof stepNumber === "number") q = q.where("stepNumber", "==", stepNumber);
-  q = q.orderBy("createdAt", "desc").limit(limit);
+  // Sort + limit in memory to avoid composite-index requirement.
+  // Hub volume is small (cap 50 returned), so this is fine.
 
   const snapshot = await q.get();
-  return snapshot.docs.map(doc => {
+  const all = snapshot.docs.map(doc => {
     const d = doc.data();
     return {
       id: doc.id,
@@ -259,6 +260,8 @@ export async function getCommunityPosts(
       updatedAt: toDate(d.updatedAt),
     };
   });
+  all.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  return all.slice(0, limit);
 }
 
 export async function createCommunityPost(post: {
