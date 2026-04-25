@@ -57,9 +57,11 @@ vi.mock("./db", () => ({
       updatedAt: new Date(),
     },
   ]),
-  createCommunityPost: vi.fn().mockResolvedValue({}),
+  createCommunityPost: vi.fn().mockResolvedValue({ id: "test-post-1" }),
   voteOnPost: vi.fn().mockResolvedValue({ action: "voted" }),
   getUserVotes: vi.fn().mockResolvedValue([]),
+  getCommentsForPost: vi.fn(),
+  addCommentToPost: vi.fn(),
   createFeedback: vi.fn().mockResolvedValue({}),
   getProfile: vi.fn().mockResolvedValue(null),
   upsertProfile: vi.fn().mockResolvedValue({}),
@@ -132,6 +134,8 @@ vi.mock("./db", () => ({
     if (t) chatThreadStore.set(k, { ...t, extractedAt: new Date() });
   }),
 }));
+
+import { getCommentsForPost, addCommentToPost, getCommunityPosts } from "./db";
 
 function createPublicContext(): TrpcContext {
   return {
@@ -309,7 +313,7 @@ describe("Community Hub Router", () => {
       lguTag: "manila_city",
     });
 
-    expect(result).toEqual({ success: true });
+    expect(result).toEqual({ success: true, id: "test-post-1" });
   });
 
   it("rejects post creation when not authenticated", async () => {
@@ -333,6 +337,38 @@ describe("Community Hub Router", () => {
     const result = await caller.community.vote({ postId: "1", voteType: "up" });
 
     expect(result).toHaveProperty("action");
+  });
+
+  it("comments returns rows from getCommentsForPost", async () => {
+    const fake = [
+      { id: "c1", postId: "p1", userId: "u1", authorName: "Aling Rosa", body: "Salamat!", createdAt: new Date("2026-04-25") },
+    ];
+    vi.mocked(getCommentsForPost).mockResolvedValueOnce(fake);
+    const caller = appRouter.createCaller(createAuthContext());
+    const out = await caller.community.comments({ postId: "p1" });
+    expect(out).toEqual(fake);
+    expect(getCommentsForPost).toHaveBeenCalledWith("p1");
+  });
+
+  it("addComment calls helper with uid + name + body", async () => {
+    const created = { id: "c2", postId: "p1", userId: "test-user-001", authorName: "Test Negosyante", body: "Tapos na ako!", createdAt: new Date() };
+    vi.mocked(addCommentToPost).mockResolvedValueOnce(created);
+    const caller = appRouter.createCaller(createAuthContext());
+    const out = await caller.community.addComment({ postId: "p1", body: "Tapos na ako!" });
+    expect(out).toEqual(created);
+    expect(addCommentToPost).toHaveBeenCalledWith("p1", "test-user-001", "Test Negosyante", "Tapos na ako!");
+  });
+
+  it("addComment rejects body shorter than 1 char", async () => {
+    const caller = appRouter.createCaller(createAuthContext());
+    await expect(caller.community.addComment({ postId: "p1", body: "   " })).rejects.toThrow();
+  });
+
+  it("list passes stepNumber through to getCommunityPosts", async () => {
+    vi.mocked(getCommunityPosts).mockResolvedValueOnce([]);
+    const caller = appRouter.createCaller(createAuthContext());
+    await caller.community.list({ lguTag: "manila_city", stepNumber: 2 });
+    expect(getCommunityPosts).toHaveBeenCalledWith({ lguTag: "manila_city", stepNumber: 2 });
   });
 });
 
