@@ -653,7 +653,7 @@ export default function Profile() {
             <input
               type="date" value={profile.dateOfBirth}
               onChange={(e) => { update("dateOfBirth", e.target.value); flushDraft({ ...profile, dateOfBirth: e.target.value }); }}
-              className={inputClass}
+              className={`${inputClass} block min-w-0 appearance-none text-base`}
               autoComplete="bday"
             />
           </Field>

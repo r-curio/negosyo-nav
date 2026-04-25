@@ -693,7 +693,7 @@ function PolishStep({
         </Row>
         <Row>
           <Field label="Date of birth">
-            <Input type="date" className={inputClass} value={data.dateOfBirth} onChange={(e) => update("dateOfBirth", e.target.value)} />
+            <Input type="date" className={`${inputClass} block w-full min-w-0 appearance-none`} value={data.dateOfBirth} onChange={(e) => update("dateOfBirth", e.target.value)} />
           </Field>
           <Field label="Civil status">
             <select

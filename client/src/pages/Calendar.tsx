@@ -442,7 +442,7 @@ export default function Calendar() {
                 type="date"
                 value={newDate}
                 onChange={(e) => setNewDate(e.target.value)}
-                className="w-full px-4 h-14 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-primary/40 mb-4"
+                className="block w-full min-w-0 appearance-none px-4 h-14 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-primary/40 mb-4"
               />
 
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Agency (optional)</p>
