@@ -507,7 +507,10 @@ Mga patakaran sa sagot:
   // Community Hub
   community: router({
     list: protectedProcedure
-      .input(z.object({ lguTag: z.string().optional() }).optional())
+      .input(z.object({
+        lguTag: z.string().optional(),
+        stepNumber: z.number().int().min(1).max(20).optional(),
+      }).optional())
       .query(async ({ input }) => {
         return getCommunityPosts(input ?? {});
       }),
@@ -518,17 +521,19 @@ Mga patakaran sa sagot:
         content: z.string().min(10),
         category: z.enum(["tip", "warning", "question", "experience"]),
         lguTag: z.string().default("manila_city"),
+        stepNumber: z.number().int().min(1).max(20).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        await createCommunityPost({
+        const { id } = await createCommunityPost({
           userId: ctx.user.uid,
           authorName: ctx.user.name || "Anonymous Negosyante",
           title: input.title,
           content: input.content,
           category: input.category,
           lguTag: input.lguTag,
+          stepNumber: input.stepNumber,
         });
-        return { success: true };
+        return { success: true, id };
       }),
 
     vote: protectedProcedure
