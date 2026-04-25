@@ -86,6 +86,16 @@ export type FirestoreComment = {
   createdAt: Date;
 };
 
+export type FirestoreReminder = {
+  id: string;
+  userId: string;
+  title: string;
+  agency?: string;
+  notes?: string;
+  dueDate: Date;
+  createdAt: Date;
+};
+
 export type FirestoreFeedback = {
   userId?: string;
   feedbackType: "outdated_info" | "incorrect_data" | "suggestion" | "bug_report" | "general";
@@ -519,6 +529,53 @@ export async function setThreadExtractedAt(uid: string, threadId: string): Promi
   const existing = await ref.get();
   if (!existing.exists) return;
   await ref.update({ extractedAt: FieldValue.serverTimestamp() });
+}
+
+// ─── Reminders ─────────────────────────────────────────────────────────────────
+
+export async function listReminders(userId: string): Promise<FirestoreReminder[]> {
+  const snap = await db().collection("reminders").where("userId", "==", userId).get();
+  const all = snap.docs.map(doc => {
+    const d = doc.data();
+    return {
+      id: doc.id,
+      userId: d.userId,
+      title: String(d.title ?? ""),
+      agency: typeof d.agency === "string" ? d.agency : undefined,
+      notes: typeof d.notes === "string" ? d.notes : undefined,
+      dueDate: toDate(d.dueDate),
+      createdAt: toDate(d.createdAt),
+    };
+  });
+  all.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
+  return all;
+}
+
+export async function createReminder(input: {
+  userId: string;
+  title: string;
+  agency?: string;
+  notes?: string;
+  dueDate: Date;
+}): Promise<{ id: string }> {
+  const ref = await db().collection("reminders").add({
+    userId: input.userId,
+    title: input.title,
+    ...(input.agency ? { agency: input.agency } : {}),
+    ...(input.notes ? { notes: input.notes } : {}),
+    dueDate: input.dueDate,
+    createdAt: FieldValue.serverTimestamp(),
+  });
+  return { id: ref.id };
+}
+
+export async function deleteReminder(userId: string, reminderId: string): Promise<void> {
+  const ref = db().collection("reminders").doc(reminderId);
+  const snap = await ref.get();
+  if (!snap.exists) return;
+  const owner = snap.data()?.userId;
+  if (owner !== userId) throw new Error("Forbidden");
+  await ref.delete();
 }
 
 // ─── Feedback ──────────────────────────────────────────────────────────────────

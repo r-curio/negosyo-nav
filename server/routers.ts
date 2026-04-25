@@ -10,6 +10,7 @@ import {
   getUserByUid, setOnboardingStep, markOnboardingComplete,
   getChatThread, listChatThreads, appendThreadMessages, deleteChatThread,
   setThreadExtractedAt, getMostRecentThread,
+  listReminders, createReminder, deleteReminder,
 } from "./db";
 import { BARANGAY_FIELDS, renderBarangayClearance } from "./pdf/barangayClearance";
 import { renderTextFallback } from "./pdf/textFallback";
@@ -635,6 +636,46 @@ Mga patakaran sa sagot:
       }),
   }),
 
+  // Reminders (custom calendar deadlines)
+  reminders: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const items = await listReminders(ctx.user.uid);
+      return items.map(r => ({
+        id: r.id,
+        title: r.title,
+        agency: r.agency ?? null,
+        notes: r.notes ?? null,
+        dueDate: r.dueDate.toISOString(),
+        createdAt: r.createdAt.toISOString(),
+      }));
+    }),
+
+    create: protectedProcedure
+      .input(z.object({
+        title: z.string().trim().min(1).max(120),
+        agency: z.string().trim().max(120).optional(),
+        notes: z.string().trim().max(500).optional(),
+        dueDate: z.string().refine(s => !Number.isNaN(Date.parse(s)), "Invalid date"),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { id } = await createReminder({
+          userId: ctx.user.uid,
+          title: input.title,
+          agency: input.agency || undefined,
+          notes: input.notes || undefined,
+          dueDate: new Date(input.dueDate),
+        });
+        return { success: true, id };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.string().min(1) }))
+      .mutation(async ({ ctx, input }) => {
+        await deleteReminder(ctx.user.uid, input.id);
+        return { success: true } as const;
+      }),
+  }),
+
   // Feedback
   feedback: router({
     submit: protectedProcedure
@@ -643,6 +684,7 @@ Mga patakaran sa sagot:
         stepNumber: z.number().optional(),
         lguId: z.string().default("manila_city"),
         message: z.string().min(5),
+        shareToCommunity: z.boolean().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
         await createFeedback({
@@ -652,7 +694,34 @@ Mga patakaran sa sagot:
           lguId: input.lguId,
           message: input.message,
         });
-        return { success: true };
+
+        let postId: string | undefined;
+        if (input.shareToCommunity) {
+          const TYPE_LABEL: Record<typeof input.feedbackType, string> = {
+            outdated_info: "Outdated Info",
+            incorrect_data: "Mali na Data",
+            suggestion: "Suggestion",
+            bug_report: "Bug Report",
+            general: "Heads-up",
+          };
+          const label = TYPE_LABEL[input.feedbackType];
+          const stepTag = input.stepNumber ? ` • Step ${input.stepNumber}` : "";
+          const firstLine = input.message.split(/\r?\n/)[0].trim();
+          const titleBody = firstLine.length > 90 ? firstLine.slice(0, 87) + "…" : firstLine;
+          const title = `[${label}${stepTag}] ${titleBody}`.slice(0, 500);
+          const content = `${input.message}\n\n— Naka-share mula sa Lakad Roadmap report.`;
+          const created = await createCommunityPost({
+            userId: ctx.user.uid,
+            authorName: ctx.user.name || "Anonymous Negosyante",
+            title,
+            content,
+            category: "warning",
+            lguTag: input.lguId,
+            stepNumber: input.stepNumber,
+          });
+          postId = created.id;
+        }
+        return { success: true, postId };
       }),
   }),
 });
