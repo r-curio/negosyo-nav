@@ -331,6 +331,54 @@ export async function getUserVotes(userId: string): Promise<Array<{ postId: stri
   }));
 }
 
+export async function getCommentsForPost(postId: string): Promise<FirestoreComment[]> {
+  const snap = await db()
+    .collection("community_posts").doc(postId)
+    .collection("comments")
+    .orderBy("createdAt", "asc")
+    .get();
+  return snap.docs.map(doc => {
+    const d = doc.data();
+    return {
+      id: doc.id,
+      postId,
+      userId: d.userId,
+      authorName: d.authorName,
+      body: String(d.body ?? ""),
+      createdAt: toDate(d.createdAt),
+    };
+  });
+}
+
+export async function addCommentToPost(
+  postId: string,
+  userId: string,
+  authorName: string,
+  body: string
+): Promise<FirestoreComment> {
+  const postRef = db().collection("community_posts").doc(postId);
+  const commentRef = postRef.collection("comments").doc();
+
+  const now = new Date();
+  await db().runTransaction(async tx => {
+    const post = await tx.get(postRef);
+    if (!post.exists) throw new Error("Post not found");
+    tx.set(commentRef, {
+      postId,
+      userId,
+      authorName,
+      body,
+      createdAt: FieldValue.serverTimestamp(),
+    });
+    tx.update(postRef, {
+      commentCount: FieldValue.increment(1),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  });
+
+  return { id: commentRef.id, postId, userId, authorName, body, createdAt: now };
+}
+
 // ─── Chat Threads ──────────────────────────────────────────────────────────────
 
 function threadsCol(uid: string) {
