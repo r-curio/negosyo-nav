@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
   getCommunityPosts, createCommunityPost, voteOnPost, getUserVotes,
+  getCommentsForPost, addCommentToPost,
   createFeedback, getProfile, upsertProfile, upsertUser,
   getUserByUid, setOnboardingStep, markOnboardingComplete,
   getChatThread, listChatThreads, appendThreadMessages, deleteChatThread,
@@ -542,6 +543,26 @@ Mga patakaran sa sagot:
     myVotes: protectedProcedure
       .query(async ({ ctx }) => {
         return getUserVotes(ctx.user.uid);
+      }),
+
+    comments: publicProcedure
+      .input(z.object({ postId: z.string().min(1) }))
+      .query(async ({ input }) => {
+        return getCommentsForPost(input.postId);
+      }),
+
+    addComment: protectedProcedure
+      .input(z.object({
+        postId: z.string().min(1),
+        body: z.string().trim().min(1).max(500),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return addCommentToPost(
+          input.postId,
+          ctx.user.uid,
+          ctx.user.name || "Anonymous Negosyante",
+          input.body,
+        );
       }),
   }),
 
