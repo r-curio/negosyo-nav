@@ -8,6 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Roadmap from "./pages/Roadmap";
 import Hub from "./pages/Hub";
+import PostDetail from "./pages/PostDetail";
 import Profile from "./pages/Profile";
 import Forms from "./pages/Forms";
 import Grants from "./pages/Grants";
@@ -36,6 +37,7 @@ function Router() {
               <Route path={"/"} component={Home} />
               <Route path={"/roadmap"} component={Roadmap} />
               <Route path={"/hub"} component={Hub} />
+              <Route path={"/hub/:postId"} component={PostDetail} />
               <Route path={"/profile"} component={Profile} />
               <Route path={"/forms"} component={Forms} />
               <Route path={"/grants"} component={Grants} />
