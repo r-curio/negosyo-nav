@@ -173,6 +173,22 @@ negosyonav/
 
 ---
 
+## 🔮 What's Next — The Retention Engine
+
+Registration is Day 1. The real value is everything after.
+
+| Feature | Why it keeps users coming back |
+|---|---|
+| **Annual Mayor's Permit renewal** | January every year — pre-filled from saved profile, one tap to download the updated PDF. No brainer. |
+| **BIR quarterly filing reminders** | 4 times a year, push-notified to the phone. Most micro-vendors have zero reminder system for this; missed filings mean penalties. |
+| **New grant cycle push alerts** | Free money notifications matched to the user's profile — when BMBE, DOLE, or SB Corp opens a new cycle, they hear about it first. |
+| **Community replies & upvotes** | Social hooks: reply to a tip, get thanked, come back to check. Reciprocity drives retention more than any push campaign. |
+| **Growth roadmaps** | Post-registration tracks for the next stage — business bank account, SSS/PhilHealth/Pag-IBIG as employer, DTI trademark, SEC incorporation if they scale up. |
+
+The saved profile is what powers all of this. Every feature above already has the data it needs — these are activations of what's already stored, not new data collection.
+
+---
+
 ## 🤝 Contributing
 
 Active work is tracked in [`docs/DEV_TASKS.md`](docs/DEV_TASKS.md) — pick a track, the file lists owner files and conflict zones so parallel devs don't collide.
