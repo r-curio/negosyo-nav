@@ -31,24 +31,6 @@ The saved profile is the retention hook: it powers renewals, post-registration r
 
 ---
 
-## Demo & Visuals
-
-- **Live demo:** _coming soon_
-- **Video pitch:** _coming soon_
-
-<table>
-  <tr>
-    <td align="center"><b>Mobile-first roadmap</b><br/><img src="roadmap-mobile-top2.png" width="240" /></td>
-    <td align="center"><b>Office locator inside the step</b><br/><img src="roadmap-offices.png" width="240" /></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Grants matched to profile</b><br/><img src="roadmap-grants-tools.png" width="240" /></td>
-    <td align="center"><b>Tools drawer (forms + planner)</b><br/><img src="tools-drawer-open.png" width="240" /></td>
-  </tr>
-</table>
-
----
-
 ## Features
 
 - **Taglish AI intake** — Gemini conversation extracts business profile from natural code-switched Filipino/English.
