@@ -31,7 +31,7 @@ The saved profile is the retention hook: it powers renewals, post-registration r
 
 ---
 
-## 🎥 Demo & Visuals
+## Demo & Visuals
 
 - **Live demo:** _coming soon_
 - **Video pitch:** _coming soon_
@@ -49,17 +49,17 @@ The saved profile is the retention hook: it powers renewals, post-registration r
 
 ---
 
-## ⚙️ Features
+## Features
 
-- **🗣️ Taglish AI intake** — Gemini conversation extracts business profile from natural code-switched Filipino/English.
-- **🗺️ Lakad Roadmap** — 5-step Manila City registration path (DTI → Barangay → Cedula → Mayor's Permit → BIR) with per-step costs, document checklists, RDO routing, and embedded office maps.
-- **📄 Auto-filled government PDFs** — the MVP anchor. The profile fills the real Manila Barangay Clearance AcroForm; DTI + BIR ship as text-fallback PDFs until official templates land.
-- **💰 Grant matcher** — pure-logic eligibility for **BMBE, DOLE Kabuhayan, SB Corp Micro-Financing** based on the saved profile.
-- **👥 Negosyante Hub** — community board with posts + upvotes, seeded with peer tips per registration step.
-- **📍 Place finder** — Manila LGU offices with Google Maps integration, surfaced *inside* the roadmap step that needs them.
-- **📅 Renewal calendar** — countdowns for Mayor's Permit + BIR annual filings, persisted per user.
-- **❓ Field-level Taglish help** — every form input opens a Gemini-powered drawer that explains *what* and *why* in Taglish.
-- **📱 Installable PWA** — offline shell, runtime caching for `/api/`, safe-area aware, 360×640-tested.
+- **Taglish AI intake** — Gemini conversation extracts business profile from natural code-switched Filipino/English.
+- **Lakad Roadmap** — 5-step Manila City registration path (DTI → Barangay → Cedula → Mayor's Permit → BIR) with per-step costs, document checklists, RDO routing, and embedded office maps.
+- **Auto-filled government PDFs** — the MVP anchor. The profile fills the real Manila Barangay Clearance AcroForm; DTI + BIR ship as text-fallback PDFs until official templates land.
+- **Grant matcher** — pure-logic eligibility for **BMBE, DOLE Kabuhayan, SB Corp Micro-Financing** based on the saved profile.
+- **Negosyante Hub** — community board with posts + upvotes, seeded with peer tips per registration step.
+- **Place finder** — Manila LGU offices with Google Maps integration, surfaced *inside* the roadmap step that needs them.
+- **Renewal calendar** — countdowns for Mayor's Permit + BIR annual filings, persisted per user.
+- **Field-level Taglish help** — every form input opens a Gemini-powered drawer that explains *what* and *why* in Taglish.
+- **Installable PWA** — offline shell, runtime caching for `/api/`, safe-area aware, 360×640-tested.
 
 ---
 
