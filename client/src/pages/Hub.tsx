@@ -3,7 +3,7 @@
  * UI Refresh: better post cards, improved vote section, cleaner modal.
  * All logic, state, and functions preserved.
  */
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -66,6 +66,16 @@ export default function Hub() {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newCategory, setNewCategory] = useState<"tip" | "warning" | "question" | "experience">("tip");
+  const [newStepNumber, setNewStepNumber] = useState<number | "">("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("compose") === "1") {
+      setShowCreateForm(true);
+      const s = Number(params.get("step"));
+      if (Number.isInteger(s) && s >= 1 && s <= 20) setNewStepNumber(s);
+    }
+  }, []);
 
   const { data: dbPosts, refetch } = trpc.community.list.useQuery({ lguTag: "manila_city" });
   const createPost = trpc.community.create.useMutation({
@@ -74,6 +84,7 @@ export default function Hub() {
       setShowCreateForm(false);
       setNewTitle("");
       setNewContent("");
+      setNewStepNumber("");
     },
   });
   const voteMutation = trpc.community.vote.useMutation({ onSuccess: () => refetch() });
@@ -102,7 +113,7 @@ export default function Hub() {
   const handleCreatePost = () => {
     if (!isAuthenticated) { window.location.href = getLoginUrl(); return; }
     if (!newTitle.trim() || !newContent.trim()) return;
-    createPost.mutate({ title: newTitle, content: newContent, category: newCategory, lguTag: "manila_city" });
+    createPost.mutate({ title: newTitle, content: newContent, category: newCategory, lguTag: "manila_city", stepNumber: typeof newStepNumber === "number" ? newStepNumber : undefined });
   };
 
   const formatDate = (date: Date | string) => {
@@ -348,6 +359,19 @@ export default function Hub() {
                   );
                 })}
               </div>
+
+              <select
+                value={newStepNumber}
+                onChange={(e) => setNewStepNumber(e.target.value ? Number(e.target.value) : "")}
+                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 mb-3 font-[var(--font-body)]"
+              >
+                <option value="">Walang step tag (general)</option>
+                <option value={1}>Step 1 — DTI Business Name</option>
+                <option value={2}>Step 2 — Barangay Clearance</option>
+                <option value={3}>Step 3 — Cedula</option>
+                <option value={4}>Step 4 — Mayor's Permit</option>
+                <option value={5}>Step 5 — BIR Registration</option>
+              </select>
 
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Title</p>
               <input
