@@ -77,6 +77,13 @@ export default function Hub() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!showCreateForm) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, [showCreateForm]);
+
   const { data: dbPosts, refetch } = trpc.community.list.useQuery({ lguTag: "manila_city" });
   const createPost = trpc.community.create.useMutation({
     onSuccess: () => {
@@ -329,7 +336,7 @@ export default function Hub() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
+            className="fixed inset-0 z-[60] bg-black/50 flex items-end sm:items-center justify-center"
             onClick={() => setShowCreateForm(false)}
           >
             <motion.div
@@ -337,7 +344,7 @@ export default function Hub() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 80, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl p-5 max-h-[85vh] overflow-y-auto"
+              className="bg-white w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl p-5 max-h-[85dvh] overflow-y-auto overscroll-contain"
             >
               <div className="flex items-center justify-between mb-5">
                 <h2 className="font-bold text-lg text-foreground font-[var(--font-display)]">
@@ -353,42 +360,35 @@ export default function Hub() {
 
               {/* Category selector */}
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Uri ng Post</p>
-              <div className="flex flex-wrap gap-2 mb-5">
-                {(["tip", "warning", "question", "experience"] as const).map((cat) => {
-                  const style = CATEGORY_STYLES[cat];
-                  const Icon = CATEGORY_ICONS[cat];
-                  return (
-                    <button
-                      key={cat}
-                      onClick={() => setNewCategory(cat)}
-                      className={`flex items-center gap-1.5 text-sm font-bold px-4 py-2.5 rounded-full border transition-all min-h-[44px] ${
-                        newCategory === cat
-                          ? `${style.bg} ${style.text} ${style.border}`
-                          : "bg-white text-muted-foreground border-border hover:border-border"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {cat === "tip" && "Tip"}
-                      {cat === "warning" && "Babala"}
-                      {cat === "question" && "Tanong"}
-                      {cat === "experience" && "Kwento"}
-                    </button>
-                  );
-                })}
-              </div>
-
               <select
-                value={newStepNumber}
-                onChange={(e) => setNewStepNumber(e.target.value ? Number(e.target.value) : "")}
-                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 mb-3 font-[var(--font-body)]"
+                value={newCategory}
+                onChange={(e) => {
+                  const v = e.target.value as "tip" | "warning" | "question" | "experience";
+                  setNewCategory(v);
+                  if (v !== "warning") setNewStepNumber("");
+                }}
+                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-primary/40 mb-5 font-[var(--font-body)]"
               >
-                <option value="">Walang step tag (general)</option>
-                <option value={1}>Step 1 — DTI Business Name</option>
-                <option value={2}>Step 2 — Barangay Clearance</option>
-                <option value={3}>Step 3 — Cedula</option>
-                <option value={4}>Step 4 — Mayor's Permit</option>
-                <option value={5}>Step 5 — BIR Registration</option>
+                <option value="tip">Tip</option>
+                <option value="warning">Babala</option>
+                <option value="question">Tanong</option>
+                <option value="experience">Kwento</option>
               </select>
+
+              {newCategory === "warning" && (
+                <select
+                  value={newStepNumber}
+                  onChange={(e) => setNewStepNumber(e.target.value ? Number(e.target.value) : "")}
+                  className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 mb-3 font-[var(--font-body)]"
+                >
+                  <option value="">Walang step tag (general)</option>
+                  <option value={1}>Step 1 — DTI Business Name</option>
+                  <option value={2}>Step 2 — Barangay Clearance</option>
+                  <option value={3}>Step 3 — Cedula</option>
+                  <option value={4}>Step 4 — Mayor's Permit</option>
+                  <option value={5}>Step 5 — BIR Registration</option>
+                </select>
+              )}
 
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Title</p>
               <input
