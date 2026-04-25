@@ -16,6 +16,7 @@ import {
   Users,
   ThumbsUp,
   ThumbsDown,
+  MessageSquare,
   MessageSquarePlus,
   AlertTriangle,
   Lightbulb,
@@ -55,64 +56,6 @@ const CATEGORY_ACCENT: Record<string, string> = {
   experience: "bg-mango",
 };
 
-const SEED_POSTS = [
-  {
-    id: "seed-1",
-    userId: 0,
-    authorName: "Aling Rosa",
-    lguTag: "manila_city",
-    category: "tip" as const,
-    title: "Mabilis lang kumuha ng permit sa E-BOSS Lounge!",
-    content: "Kung pupunta kayo sa Manila City Hall para sa Mayor's Permit, diretso kayo sa E-BOSS Lounge sa Ground Floor. Hindi kayo kailangan pumila sa Room 110. Natapos ako in 2 hours lang! Bring complete documents ha.",
-    upvotes: 24,
-    downvotes: 1,
-    isFlagged: false,
-    createdAt: new Date("2026-04-20T08:00:00Z"),
-    updatedAt: new Date("2026-04-20T08:00:00Z"),
-  },
-  {
-    id: "seed-2",
-    userId: 0,
-    authorName: "Kuya Ben",
-    lguTag: "manila_city",
-    category: "warning" as const,
-    title: "Mag-ingat sa mga fixer sa labas ng City Hall!",
-    content: "May mga tao sa labas ng Manila City Hall na mag-ooffer na 'tulungan' kayo sa permit. Huwag kayong papayag — ₱3,000-₱5,000 ang singil nila para sa process na kaya niyong gawin mag-isa. Lahat ng info nasa NegosyoNav na! Kaya niyo 'to!",
-    upvotes: 42,
-    downvotes: 0,
-    isFlagged: false,
-    createdAt: new Date("2026-04-18T10:00:00Z"),
-    updatedAt: new Date("2026-04-18T10:00:00Z"),
-  },
-  {
-    id: "seed-3",
-    userId: 0,
-    authorName: "Maria Santos",
-    lguTag: "manila_city",
-    category: "experience" as const,
-    title: "Nakapag-register na ako ng carinderia ko sa Sampaloc!",
-    content: "Salamat sa NegosyoNav! Hindi ko alam dati na kailangan ko pala ng Cedula bago Mayor's Permit. Natapos ko lahat in 1 week lang. Total gastos ko: ₱6,200. Nag-apply din ako sa BMBE para sa tax exemption. Kaya niyo rin 'to mga ka-negosyante!",
-    upvotes: 18,
-    downvotes: 0,
-    isFlagged: false,
-    createdAt: new Date("2026-04-15T14:00:00Z"),
-    updatedAt: new Date("2026-04-15T14:00:00Z"),
-  },
-  {
-    id: "seed-4",
-    userId: 0,
-    authorName: "Tatay Jun",
-    lguTag: "manila_city",
-    category: "question" as const,
-    title: "Kailangan ba talaga ng Fire Safety Certificate para sa sari-sari store?",
-    content: "Nag-apply ako ng Mayor's Permit para sa maliit na sari-sari store sa Tondo. Sabi nila kailangan ko ng FSIC from BFP. Pero maliit lang naman ang tindahan ko, attached sa bahay. May exemption ba para sa ganito?",
-    upvotes: 8,
-    downvotes: 0,
-    isFlagged: false,
-    createdAt: new Date("2026-04-12T09:00:00Z"),
-    updatedAt: new Date("2026-04-12T09:00:00Z"),
-  },
-];
 
 export default function Hub() {
   const [, navigate] = useLocation();
@@ -135,11 +78,16 @@ export default function Hub() {
   });
   const voteMutation = trpc.community.vote.useMutation({ onSuccess: () => refetch() });
 
-  const allPosts = useMemo(() => {
-    const real = dbPosts || [];
-    if (real.length === 0) return SEED_POSTS;
-    return real;
-  }, [dbPosts]);
+  const { data: myVotesData } = trpc.community.myVotes.useQuery(undefined, {
+    enabled: isAuthenticated,
+  });
+  const myVoteByPost = useMemo(() => {
+    const m = new Map<string, "up" | "down">();
+    for (const v of myVotesData ?? []) m.set(v.postId, v.voteType);
+    return m;
+  }, [myVotesData]);
+
+  const allPosts = useMemo(() => dbPosts ?? [], [dbPosts]);
 
   const filteredPosts = useMemo(() => {
     if (selectedCategory === "all") return allPosts;
@@ -243,7 +191,10 @@ export default function Hub() {
                 <div className={`h-1 w-full ${accentBar}`} />
 
                 {/* Post header */}
-                <div className="px-4 pt-3.5 pb-3">
+                <button
+                  onClick={() => navigate(`/hub/${post.id}`)}
+                  className="w-full text-left px-4 pt-4 pb-2"
+                >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-10 h-10 rounded-full bg-community-light flex items-center justify-center shrink-0">
@@ -283,23 +234,34 @@ export default function Hub() {
                   <div className="text-sm text-muted-foreground leading-relaxed">
                     <Streamdown>{post.content}</Streamdown>
                   </div>
-                </div>
+                </button>
 
                 {/* Vote section */}
-                <div className="px-4 py-2.5 border-t border-border/50 bg-muted/30 flex items-center gap-1">
+                <div className="px-4 py-2 border-t border-border/50 flex items-center gap-4">
                   <button
-                    onClick={() => handleVote(String(post.id), "up")}
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors min-h-[44px] px-3 rounded-xl hover:bg-white"
+                    onClick={() => handleVote(post.id, "up")}
+                    className={`flex items-center gap-1 text-xs transition-colors ${
+                      myVoteByPost.get(post.id) === "up" ? "text-teal" : "text-muted-foreground hover:text-teal"
+                    }`}
                   >
-                    <ThumbsUp className="w-4 h-4" />
-                    <span className="font-semibold font-[var(--font-mono)]">{post.upvotes}</span>
+                    <ThumbsUp className="w-3.5 h-3.5" />
+                    <span className="font-[var(--font-mono)]">{post.upvotes}</span>
                   </button>
                   <button
-                    onClick={() => handleVote(String(post.id), "down")}
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-destructive transition-colors min-h-[44px] px-3 rounded-xl hover:bg-white"
+                    onClick={() => handleVote(post.id, "down")}
+                    className={`flex items-center gap-1 text-xs transition-colors ${
+                      myVoteByPost.get(post.id) === "down" ? "text-red-500" : "text-muted-foreground hover:text-red-500"
+                    }`}
                   >
-                    <ThumbsDown className="w-4 h-4" />
-                    <span className="font-semibold font-[var(--font-mono)]">{post.downvotes}</span>
+                    <ThumbsDown className="w-3.5 h-3.5" />
+                    <span className="font-[var(--font-mono)]">{post.downvotes}</span>
+                  </button>
+                  <button
+                    onClick={() => navigate(`/hub/${post.id}`)}
+                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-earth-brown transition-colors ml-auto"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    <span className="font-[var(--font-mono)]">{post.commentCount ?? 0}</span>
                   </button>
                 </div>
               </motion.div>
