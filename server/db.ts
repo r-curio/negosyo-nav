@@ -268,15 +268,18 @@ export async function createCommunityPost(post: {
   content: string;
   category: "tip" | "warning" | "question" | "experience";
   lguTag: string;
-}): Promise<void> {
-  await db().collection("community_posts").add({
+  stepNumber?: number;
+}): Promise<{ id: string }> {
+  const ref = await db().collection("community_posts").add({
     ...post,
     upvotes: 0,
     downvotes: 0,
+    commentCount: 0,
     isFlagged: false,
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
   });
+  return { id: ref.id };
 }
 
 export async function voteOnPost(
