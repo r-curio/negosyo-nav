@@ -8,10 +8,10 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft, MapPin, Clock, Users, Navigation, Phone, ExternalLink,
-  Building2, FileText, Landmark,
+  ArrowLeft, MapPin, Building2, FileText, Landmark,
 } from "lucide-react";
 import { manilaData, type Office, type BirRdo } from "@/data/manilaData";
+import { OfficeMapCard, type OfficeLike } from "@/components/OfficeMapCard";
 
 type PlaceType = "city_hall" | "negosyo_center" | "bir_rdo" | "barangay";
 
@@ -55,6 +55,21 @@ function officeToPlace(o: Office): PlaceItem {
     bestTime: o.bestTime ?? "Weekday mornings",
     queueTip: o.queueTip ?? o.notes ?? "",
     step: stepsForOfficeId(o.id),
+  };
+}
+
+function placeToOfficeLike(p: PlaceItem): OfficeLike {
+  return {
+    id: p.type === "bir_rdo" ? undefined : p.id,
+    rdo_code: p.type === "bir_rdo" ? p.id : undefined,
+    name: p.name,
+    address: p.address,
+    lat: p.lat,
+    lng: p.lng,
+    contact_phone: p.phone,
+    hours: p.hours,
+    bestTime: p.bestTime,
+    queueTip: p.queueTip,
   };
 }
 
@@ -187,56 +202,8 @@ export default function Places() {
 
               {isSelected && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="overflow-hidden">
-                  <div className="px-4 pb-4 border-t border-border/50 pt-3 space-y-3">
-                    {/* Hours */}
-                    <div className="flex items-center gap-2 text-xs text-earth-brown">
-                      <Clock className="w-4 h-4 text-teal" />
-                      <span className="font-medium">Hours:</span> {office.hours}
-                    </div>
-
-                    {/* Best time */}
-                    <div className="bg-teal-light rounded-xl p-3">
-                      <p className="text-xs text-earth-brown">
-                        <span className="font-semibold">Best Time to Visit: </span>{office.bestTime}
-                      </p>
-                    </div>
-
-                    {/* Queue tip */}
-                    <div className="bg-mango-light rounded-xl p-3">
-                      <p className="text-xs text-earth-brown flex items-start gap-2">
-                        <Users className="w-4 h-4 text-mango shrink-0 mt-0.5" />
-                        <span><span className="font-semibold">Queue Tip: </span>{office.queueTip}</span>
-                      </p>
-                    </div>
-
-                    {/* Phone */}
-                    {office.phone && (
-                      <div className="flex items-center gap-2 text-xs text-earth-brown">
-                        <Phone className="w-4 h-4 text-teal" />
-                        <span>{office.phone}</span>
-                      </div>
-                    )}
-
-                    {/* Actions */}
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${office.lat},${office.lng}`, "_blank")}
-                        size="sm"
-                        className="flex-1 bg-teal hover:bg-teal/90 text-white rounded-xl text-xs"
-                      >
-                        <Navigation className="w-3 h-3 mr-1" />Open in Google Maps
-                      </Button>
-                      {office.phone && (
-                        <Button
-                          onClick={() => window.open(`tel:${office.phone}`, "_self")}
-                          variant="outline"
-                          size="sm"
-                          className="rounded-xl border-teal/30 text-teal text-xs"
-                        >
-                          <Phone className="w-3 h-3 mr-1" />Call
-                        </Button>
-                      )}
-                    </div>
+                  <div className="px-4 pb-4 border-t border-border/50 pt-3">
+                    <OfficeMapCard office={placeToOfficeLike(office)} />
                   </div>
                 </motion.div>
               )}
