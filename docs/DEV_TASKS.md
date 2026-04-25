@@ -174,6 +174,14 @@ Web Speech API (`SpeechRecognition`, `lang="fil-PH"` with `en-PH` fallback). Mic
 
 Applied Design.md ("Bayanihan Modernism") system-wide. No logic changes.
 
+### Track R2 — Soft Analytics UI Refactor — ✅ done 2026-04-26
+**Owner files:** `client/src/index.css`, `client/src/pages/Home.tsx`.
+
+Design.md updated to "Soft Analytics UI" (modern SaaS/fintech aesthetic). Full CSS token remap — no logic changes. Two targeted JSX fixes in `Home.tsx`.
+
+- R2.1 `index.css`: Remapped entire brand palette — primary blue `#293ff5` replaces Forest Green; `--color-teal` and `--color-forest` aliases point to blue so existing `bg-teal` / `bg-forest-light` JSX auto-cascades. Background → `#f8fafc` (near-white slate), foreground → `#0f172a` (dark slate). Amber (`--color-mango`) retained for cost/grants emphasis. Community purple retained for Hub. `--radius` bumped to `0.875rem` (14px). Card shadow added: `0 1px 2px rgba(0,0,0,0.04)` / hover `0 4px 12px rgba(0,0,0,0.06)`. `--accent` remapped to teal-soft `#ccfbf7` for shadcn hover states. Added `--color-brand-teal` + `.gradient-brand` / `.gradient-brand-deep` / `.gradient-brand-soft` utilities. — ✅ done 2026-04-26
+- R2.2 `Home.tsx`: Brand logo icon changed from flat `bg-teal` to `gradient-brand` (teal→blue diagonal). Roadmap CTA button changed from amber to gradient-brand for primary emphasis per Design.md "gradient for CTA" rule. — ✅ done 2026-04-26
+
 - R.1 `index.html`: Replaced Archivo Black + DM Sans with Plus Jakarta Sans (weight 400–800); kept JetBrains Mono for numeric data — ✅ done 2026-04-25
 - R.2 `index.css`: Remapped `--primary` → Forest Green oklch(0.58 0.15 155), `--background` → Warm Gray oklch(0.96 0.015 88), added `--color-community` purple token (#534AB7), `--color-mango` shifted to amber (#BA7517 range); all semantic aliases preserved for existing JSX — ✅ done 2026-04-25
 - R.3 `App.tsx` BottomNav: 48dp min tap targets, pill-highlight active state with `bg-forest-light`, removed unused icon imports — ✅ done 2026-04-25

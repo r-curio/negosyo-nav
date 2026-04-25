@@ -174,13 +174,8 @@ export default function Home() {
           >
             <Menu className="w-5 h-5" />
           </button>
-          <div className="flex items-center gap-2">
-            <span className="font-[var(--font-display)] text-lg text-earth-brown tracking-tight">
-              NegosyoNav
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-teal flex items-center justify-center">
-              <MapPin className="w-4 h-4 text-white" />
-            </div>
+          <div className="flex items-center">
+            <img src="/LOGO.svg" alt="NegosyoNav" className="h-8 w-auto" />
           </div>
         </div>
       </header>
@@ -309,7 +304,8 @@ export default function Home() {
             >
               <Button
                 onClick={() => navigate("/roadmap")}
-                className="bg-mango hover:bg-mango/90 text-earth-brown font-[var(--font-display)] text-base px-8 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all"
+                className="font-[var(--font-display)] text-base px-8 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all text-white"
+                style={{ background: "linear-gradient(135deg, var(--color-brand-teal), var(--color-forest))" }}
               >
                 <Sparkles className="w-5 h-5 mr-2" />
                 Tingnan ang Lakad Roadmap
