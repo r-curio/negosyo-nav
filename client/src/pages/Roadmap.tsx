@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { manilaData, type RegistrationStep } from "@/data/manilaData";
 import { StepOfficeCard } from "@/components/StepOfficeCard";
+import { RoadmapTipsForStep } from "@/components/RoadmapTipsForStep";
 import ChatFab from "@/components/ChatFab";
 import { toast } from "sonner";
 
@@ -192,6 +193,7 @@ function StepCard({
                   {/* Office card + map */}
                   <div className="px-4 py-4">
                     <StepOfficeCard step={step} profile={profile} />
+                    <RoadmapTipsForStep stepNumber={step.step_number} lguTag="manila_city" />
                   </div>
 
                   {/* Requirements */}
