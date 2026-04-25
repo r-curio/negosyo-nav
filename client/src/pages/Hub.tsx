@@ -36,7 +36,7 @@ const CATEGORIES = [
 ] as const;
 
 const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
-  tip:        { bg: "bg-community-light", text: "text-community", border: "border-community/20" },
+  tip:        { bg: "bg-secondary", text: "text-primary", border: "border-primary/20" },
   warning:    { bg: "bg-destructive/10",  text: "text-destructive", border: "border-destructive/20" },
   question:   { bg: "bg-primary/10",      text: "text-primary",     border: "border-primary/20" },
   experience: { bg: "bg-mango-light",     text: "text-foreground",  border: "border-mango/20" },
@@ -50,7 +50,7 @@ const CATEGORY_ICONS: Record<string, typeof Lightbulb> = {
 };
 
 const CATEGORY_ACCENT: Record<string, string> = {
-  tip: "bg-community",
+  tip: "bg-primary",
   warning: "bg-destructive",
   question: "bg-primary",
   experience: "bg-mango",
@@ -153,7 +153,7 @@ export default function Hub() {
               if (!isAuthenticated) { window.location.href = getLoginUrl(); return; }
               setShowCreateForm(true);
             }}
-            className="bg-community hover:bg-community/90 text-white text-sm font-bold px-4 h-10 rounded-full font-[var(--font-display)]"
+            className="bg-primary hover:bg-primary/90 text-white text-sm font-bold px-4 h-10 rounded-full font-[var(--font-display)]"
           >
             <MessageSquarePlus className="w-4 h-4 mr-1.5" />
             Mag-post
@@ -171,8 +171,8 @@ export default function Hub() {
                 onClick={() => setSelectedCategory(value)}
                 className={`shrink-0 flex items-center gap-1.5 text-xs font-semibold px-4 py-2.5 rounded-full transition-all min-h-[44px] ${
                   selectedCategory === value
-                    ? "bg-community text-white shadow-sm"
-                    : "bg-white text-muted-foreground border border-border hover:border-community/30 hover:text-community"
+                    ? "bg-primary text-white shadow-sm"
+                    : "bg-white text-muted-foreground border border-border hover:border-primary/30 hover:text-primary"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -189,7 +189,7 @@ export default function Hub() {
           {filteredPosts.map((post, i) => {
             const style = CATEGORY_STYLES[post.category] || CATEGORY_STYLES.tip;
             const CategoryIcon = CATEGORY_ICONS[post.category] || Lightbulb;
-            const accentBar = CATEGORY_ACCENT[post.category] || "bg-community";
+            const accentBar = CATEGORY_ACCENT[post.category] || "bg-primary";
             return (
               <motion.div
                 key={post.id}
@@ -208,8 +208,8 @@ export default function Hub() {
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-full bg-community-light flex items-center justify-center shrink-0">
-                        <span className="text-sm font-bold text-community">
+                      <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
+                        <span className="text-sm font-bold text-primary">
                           {post.authorName.charAt(0)}
                         </span>
                       </div>
@@ -282,8 +282,8 @@ export default function Hub() {
 
         {filteredPosts.length === 0 && (
           <div className="text-center py-16 px-4">
-            <div className="w-16 h-16 rounded-full bg-community-light flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-community/50" />
+            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+              <Users className="w-8 h-8 text-primary/50" />
             </div>
             <p className="text-base font-bold text-foreground font-[var(--font-display)]">
               Wala pang posts dito.
@@ -296,7 +296,7 @@ export default function Hub() {
                 if (!isAuthenticated) { window.location.href = getLoginUrl(); return; }
                 setShowCreateForm(true);
               }}
-              className="bg-community hover:bg-community/90 text-white rounded-full font-[var(--font-display)]"
+              className="bg-primary hover:bg-primary/90 text-white rounded-full font-[var(--font-display)]"
             >
               <MessageSquarePlus className="w-4 h-4 mr-2" />
               Mag-post Ngayon
@@ -379,7 +379,7 @@ export default function Hub() {
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="Ano ang title ng post mo?"
-                className="w-full px-4 h-14 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-community/40 mb-4"
+                className="w-full px-4 h-14 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-primary/40 mb-4"
               />
 
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Mensahe</p>
@@ -388,12 +388,12 @@ export default function Hub() {
                 onChange={(e) => setNewContent(e.target.value)}
                 placeholder="I-share ang iyong experience, tip, o tanong..."
                 rows={5}
-                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-community/40 mb-5 resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-primary/40 mb-5 resize-none"
               />
               <Button
                 onClick={handleCreatePost}
                 disabled={!newTitle.trim() || !newContent.trim() || createPost.isPending}
-                className="w-full h-14 bg-community hover:bg-community/90 text-white font-bold text-base rounded-xl font-[var(--font-display)]"
+                className="w-full h-14 bg-primary hover:bg-primary/90 text-white font-bold text-base rounded-xl font-[var(--font-display)]"
               >
                 <Send className="w-5 h-5 mr-2" />
                 {createPost.isPending ? "Nagpo-post..." : "I-post sa Hub"}
