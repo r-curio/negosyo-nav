@@ -41,29 +41,35 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* NegosyoNav Design System — Bayanihan Modernism */
+  /* NegosyoNav Design System — Soft Analytics UI */
 
-  /* Forest Green palette (primary) */
-  --color-forest: oklch(0.58 0.15 155);          /* #1D9E75 — primary brand */
-  --color-forest-dark: oklch(0.44 0.12 160);      /* #0F6E56 — deep teal accent */
-  --color-forest-light: oklch(0.93 0.05 155);     /* surface light green */
+  /* Primary: Blue #293ff5 */
+  --color-forest: oklch(0.47 0.27 264);          /* #293ff5 — primary blue */
+  --color-forest-dark: oklch(0.41 0.25 264);     /* #1f2fd1 — hover */
+  --color-forest-light: oklch(0.94 0.06 264);    /* #e0e7ff — soft blue surface */
 
-  /* Warm gray neutrals */
-  --color-warm-cream: oklch(0.96 0.015 88);       /* #F1EFE8 — background */
-  --color-warm-white: oklch(1 0 0);               /* card surface */
-  --color-earth-brown: oklch(0.38 0.04 62);       /* primary text */
+  /* Neutral slate background */
+  --color-warm-cream: oklch(0.98 0.003 240);     /* #f8fafc — near-white slate */
+  --color-warm-white: oklch(1 0 0);              /* white */
+  --color-earth-brown: oklch(0.13 0.02 250);     /* #0f172a — dark slate text */
 
-  /* Brand accents */
-  --color-mango: oklch(0.62 0.14 68);             /* Amber — grants / urgency */
-  --color-mango-light: oklch(0.93 0.06 70);       /* amber surface */
-  --color-community: oklch(0.48 0.18 274);        /* #534AB7 — Hub purple */
-  --color-community-light: oklch(0.93 0.06 274);  /* purple surface */
+  /* Amber — cost/grants/warning emphasis */
+  --color-mango: oklch(0.74 0.16 75);            /* #f59e0b — amber */
+  --color-mango-light: oklch(0.97 0.04 80);      /* #fef3c7 — amber tint */
 
-  /* Legacy compat aliases (used in existing JSX via text-teal, bg-teal-light etc.) */
-  --color-teal: oklch(0.58 0.15 155);
-  --color-teal-light: oklch(0.93 0.05 155);
-  --color-jeepney-red: oklch(0.52 0.19 25);
-  --color-success: oklch(0.62 0.17 145);
+  /* Community/Hub purple (unchanged) */
+  --color-community: oklch(0.48 0.18 274);       /* #534AB7 — Hub purple */
+  --color-community-light: oklch(0.93 0.06 274); /* purple surface */
+
+  /* Brand teal — gradient accent only, not standalone UI */
+  --color-brand-teal: oklch(0.82 0.14 186);      /* #01dbca — gradient teal */
+  --color-brand-teal-light: oklch(0.96 0.06 186);/* #ccfbf7 — teal soft */
+
+  /* Legacy compat aliases — now map to primary blue */
+  --color-teal: oklch(0.47 0.27 264);            /* was green, now primary blue */
+  --color-teal-light: oklch(0.94 0.06 264);      /* soft blue surface */
+  --color-jeepney-red: oklch(0.56 0.22 25);      /* #dc2626 */
+  --color-success: oklch(0.55 0.15 145);         /* #16a34a */
 
   /* Typography — Plus Jakarta Sans throughout */
   --font-display: 'Plus Jakarta Sans', sans-serif;
@@ -72,41 +78,41 @@
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.875rem; /* 14px per Design.md */
 
-  /* Semantic tokens mapped to Design.md palette */
-  --background: oklch(0.96 0.015 88);             /* warm gray page background */
-  --foreground: oklch(0.38 0.04 62);              /* earth-brown text */
+  /* Semantic tokens — Soft Analytics UI */
+  --background: oklch(0.98 0.003 240);            /* #f8fafc — near-white slate */
+  --foreground: oklch(0.13 0.02 250);             /* #0f172a — dark slate */
   --card: oklch(1 0 0);                           /* white card surface */
-  --card-foreground: oklch(0.38 0.04 62);
+  --card-foreground: oklch(0.13 0.02 250);        /* #0f172a */
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.38 0.04 62);
-  --primary: oklch(0.58 0.15 155);                /* Forest Green */
-  --primary-foreground: oklch(1 0 0);             /* white on green */
-  --secondary: oklch(0.93 0.05 155);              /* light green surface */
-  --secondary-foreground: oklch(0.38 0.04 62);
-  --muted: oklch(0.93 0.01 88);                   /* slightly warm gray */
-  --muted-foreground: oklch(0.55 0.03 80);
-  --accent: oklch(0.62 0.14 68);                  /* Amber (grants) */
-  --accent-foreground: oklch(0.38 0.04 62);
-  --destructive: oklch(0.52 0.19 25);             /* jeepney-red */
+  --popover-foreground: oklch(0.13 0.02 250);
+  --primary: oklch(0.47 0.27 264);                /* #293ff5 — primary blue */
+  --primary-foreground: oklch(1 0 0);             /* white on blue */
+  --secondary: oklch(0.94 0.06 264);              /* #e0e7ff — soft blue */
+  --secondary-foreground: oklch(0.13 0.02 250);
+  --muted: oklch(0.97 0.005 240);                 /* #f1f5f9 — slate-100 */
+  --muted-foreground: oklch(0.52 0.04 245);       /* #64748b — slate-500 */
+  --accent: oklch(0.96 0.05 186);                 /* #ccfbf7 — teal soft (shadcn hover) */
+  --accent-foreground: oklch(0.13 0.02 250);
+  --destructive: oklch(0.56 0.22 25);             /* #dc2626 */
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.88 0.02 85);                  /* hairline border */
-  --input: oklch(0.91 0.01 85);
-  --ring: oklch(0.58 0.15 155);                   /* Forest Green focus ring */
-  --chart-1: oklch(0.62 0.14 68);
-  --chart-2: oklch(0.58 0.15 155);
-  --chart-3: oklch(0.52 0.19 25);
-  --chart-4: oklch(0.62 0.17 145);
-  --chart-5: oklch(0.48 0.18 274);
-  --sidebar: oklch(0.96 0.015 88);
-  --sidebar-foreground: oklch(0.38 0.04 62);
-  --sidebar-primary: oklch(0.58 0.15 155);
+  --border: oklch(0.93 0.007 240);                /* #e2e8f0 — slate-200 */
+  --input: oklch(0.97 0.005 240);                 /* #f1f5f9 */
+  --ring: oklch(0.47 0.27 264);                   /* #293ff5 — blue focus ring */
+  --chart-1: oklch(0.74 0.16 75);                 /* amber */
+  --chart-2: oklch(0.47 0.27 264);                /* blue */
+  --chart-3: oklch(0.56 0.22 25);                 /* red */
+  --chart-4: oklch(0.55 0.15 145);                /* green */
+  --chart-5: oklch(0.48 0.18 274);                /* purple */
+  --sidebar: oklch(0.98 0.003 240);               /* same as background */
+  --sidebar-foreground: oklch(0.13 0.02 250);
+  --sidebar-primary: oklch(0.47 0.27 264);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.93 0.06 70);
-  --sidebar-accent-foreground: oklch(0.38 0.04 62);
-  --sidebar-border: oklch(0.88 0.02 85);
-  --sidebar-ring: oklch(0.58 0.15 155);
+  --sidebar-accent: oklch(0.94 0.06 264);
+  --sidebar-accent-foreground: oklch(0.13 0.02 250);
+  --sidebar-border: oklch(0.93 0.007 240);
+  --sidebar-ring: oklch(0.47 0.27 264);
 }
 
 @layer base {
@@ -157,7 +163,7 @@
     min-width: 0;
   }
 
-  /* Primary action button — 56dp, Forest Green */
+  /* Primary action button — 56dp, Blue */
   .btn-primary-lakad {
     @apply w-full h-14 rounded-xl bg-primary text-primary-foreground font-bold text-lg
            flex items-center justify-center gap-2 shadow-sm
@@ -165,10 +171,26 @@
     font-family: var(--font-display);
   }
 
-  /* Card — Design.md spec: 12dp radius, 1px hairline, no shadow */
+  /* Card — Design.md spec: 14px radius, 1px border, soft depth shadow */
   .negosyo-card {
     @apply bg-card rounded-xl border border-border;
     padding: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease;
+  }
+  .negosyo-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Brand gradient utilities — hero, CTA, highlights only */
+  .gradient-brand {
+    background: linear-gradient(135deg, var(--color-brand-teal), var(--color-forest));
+  }
+  .gradient-brand-deep {
+    background: linear-gradient(135deg, var(--color-forest), oklch(0.18 0.05 250));
+  }
+  .gradient-brand-soft {
+    background: linear-gradient(135deg, oklch(1 0 0), var(--color-brand-teal-light));
   }
 
   @media (min-width: 640px) {
