@@ -12,9 +12,19 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
 <p align="center">
-  <img src="roadmap-mobile-top.png" alt="NegosyoNav Lakad Roadmap on mobile" width="320" />
-  &nbsp;&nbsp;
-  <img src="roadmap-grants-tools.png" alt="Grant matches inside the roadmap" width="320" />
+  <img src="client/public/lakad-roadmap.jpg" alt="Lakad Roadmap — 5-step registration timeline" width="240" />
+  &nbsp;
+  <img src="client/public/roadmap-map.jpg" alt="Roadmap with embedded office map" width="240" />
+  &nbsp;
+  <img src="client/public/roadmap-checklist.jpg" alt="Step checklist with requirements" width="240" />
+</p>
+
+<p align="center">
+  <img src="client/public/smart-autofill.jpg" alt="Smart profile auto-fill for government forms" width="240" />
+  &nbsp;
+  <img src="client/public/grant.jpg" alt="Grant matcher — BMBE, DOLE, SB Corp" width="240" />
+  &nbsp;
+  <img src="client/public/hub.jpg" alt="Negosyante Hub community board" width="240" />
 </p>
 
 ---
