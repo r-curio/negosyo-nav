@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="client/public/LOGO.svg" alt="NegosyoNav logo" height="72" />
+</p>
+
 # 🇵🇭 NegosyoNav
 
 > The Taglish AI co-pilot that walks Filipino micro-entrepreneurs through Philippine business registration — DTI, Barangay, Cedula, Mayor's Permit, BIR — in one mobile-first PWA.
@@ -12,19 +16,14 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
 <p align="center">
-  <img src="client/public/lakad-roadmap.jpg" alt="Lakad Roadmap — 5-step registration timeline" width="240" />
-  &nbsp;
-  <img src="client/public/roadmap-map.jpg" alt="Roadmap with embedded office map" width="240" />
-  &nbsp;
-  <img src="client/public/roadmap-checklist.jpg" alt="Step checklist with requirements" width="240" />
-</p>
-
-<p align="center">
-  <img src="client/public/smart-autofill.jpg" alt="Smart profile auto-fill for government forms" width="240" />
-  &nbsp;
-  <img src="client/public/grant.jpg" alt="Grant matcher — BMBE, DOLE, SB Corp" width="240" />
-  &nbsp;
-  <img src="client/public/hub.jpg" alt="Negosyante Hub community board" width="240" />
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" />
+  <img alt="tRPC" src="https://img.shields.io/badge/tRPC-11-2596BE?logo=trpc&logoColor=white" />
+  <img alt="Firebase" src="https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-FFCA28?logo=firebase&logoColor=black" />
+  <img alt="Gemini" src="https://img.shields.io/badge/Google-Gemini-4285F4?logo=google&logoColor=white" />
+  <img alt="Tailwind v4" src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white" />
+  <img alt="PWA" src="https://img.shields.io/badge/PWA-installable-5A0FC8?logo=pwa&logoColor=white" />
+  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" />
 </p>
 
 ---
@@ -43,11 +42,45 @@ The saved profile is the retention hook: it powers renewals, post-registration r
 
 ## Features
 
-- **Taglish AI intake** — Gemini conversation extracts business profile from natural code-switched Filipino/English.
-- **Lakad Roadmap** — 5-step Manila City registration path (DTI → Barangay → Cedula → Mayor's Permit → BIR) with per-step costs, document checklists, RDO routing, and embedded office maps.
-- **Auto-filled government PDFs** — the MVP anchor. We ran the scanned Manila Barangay Clearance through **Google Document AI** (Form Parser) to detect field regions and convert the flat PDF into a fillable AcroForm, then fill it from the profile with `pdf-lib`. DTI + BIR ship as text-fallback PDFs until those templates get the same Document AI pass.
-- **Grant matcher** — pure-logic eligibility for **BMBE, DOLE Kabuhayan, SB Corp Micro-Financing** based on the saved profile.
-- **Negosyante Hub** — community board with posts + upvotes, seeded with peer tips per registration step.
+### Lakad Roadmap
+
+5-step Manila City registration path (DTI → Barangay → Cedula → Mayor's Permit → BIR) with per-step costs, document checklists, RDO routing, and embedded office maps.
+
+<p align="center">
+  <img src="client/public/lakad-roadmap.jpg" alt="Lakad Roadmap — 5-step registration timeline" width="260" />
+  &nbsp;&nbsp;
+  <img src="client/public/roadmap-checklist.jpg" alt="Per-step document checklist and requirements" width="260" />
+  &nbsp;&nbsp;
+  <img src="client/public/roadmap-map.jpg" alt="Office mini-map embedded inside each roadmap step" width="260" />
+</p>
+
+### Auto-filled Government PDFs
+
+The MVP anchor. Profile data from the Taglish chat pre-fills the actual government form templates. The Manila Barangay Clearance is a real AcroForm filled field-by-field with `pdf-lib`; DTI + BIR ship as structured text PDFs.
+
+<p align="center">
+  <img src="client/public/smart-autofill.jpg" alt="Smart profile auto-fill for government forms" width="320" />
+</p>
+
+### Grant Matcher
+
+Pure-logic eligibility check against **BMBE, DOLE Kabuhayan (DILP), and SB Corp Micro-Financing** based on the saved profile — surfacing up to ₱1 million in available programs.
+
+<p align="center">
+  <img src="client/public/grant.jpg" alt="Grant matcher showing BMBE, DOLE, and SB Corp eligibility" width="320" />
+</p>
+
+### Negosyante Hub
+
+Community board with posts + upvotes, seeded with peer tips tagged by registration step and LGU.
+
+<p align="center">
+  <img src="client/public/hub.jpg" alt="Negosyante Hub community board" width="320" />
+</p>
+
+### More Features
+
+- **Taglish AI intake** — Gemini conversation extracts a structured business profile from natural code-switched Filipino/English.
 - **Place finder** — Manila LGU offices with Google Maps integration, surfaced *inside* the roadmap step that needs them.
 - **Renewal calendar** — countdowns for Mayor's Permit + BIR annual filings, persisted per user.
 - **Field-level Taglish help** — every form input opens a Gemini-powered drawer that explains *what* and *why* in Taglish.
