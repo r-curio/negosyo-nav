@@ -319,7 +319,7 @@ export default function Forms() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-border">
         <div className="container flex items-center gap-3 h-14">
-          <button onClick={() => navigate("/roadmap")} className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+          <button onClick={() => navigate("/roadmap")} className="p-1.5 rounded-lg hover:bg-muted transition-colors lg:hidden">
             <ArrowLeft className="w-5 h-5 text-earth-brown" />
           </button>
           <div className="flex-1">
@@ -329,7 +329,7 @@ export default function Forms() {
         </div>
       </header>
 
-      <div className="container max-w-2xl mt-4 space-y-4">
+      <div className="container max-w-2xl lg:max-w-3xl mt-4 space-y-4">
         {/* Profile status */}
         {!hasProfile ? (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-mango-light rounded-2xl border border-mango/30 p-4 shadow-sm">

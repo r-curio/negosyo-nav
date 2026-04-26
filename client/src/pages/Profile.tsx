@@ -446,7 +446,7 @@ export default function Profile() {
         <div className="container flex items-center gap-2 h-14 px-3">
           <button
             onClick={() => navigate("/")}
-            className="p-2 min-h-11 min-w-11 rounded-lg hover:bg-muted active:bg-muted transition-colors flex items-center justify-center"
+            className="p-2 min-h-11 min-w-11 rounded-lg hover:bg-muted active:bg-muted transition-colors flex items-center justify-center lg:hidden"
             aria-label="Back"
           >
             <ArrowLeft className="w-5 h-5 text-earth-brown" />
@@ -512,7 +512,7 @@ export default function Profile() {
 
       </header>
 
-      <div className="container max-w-2xl px-4 mt-4 space-y-4">
+      <div className="container max-w-2xl lg:max-w-3xl px-4 mt-4 space-y-4">
         {/* Auto-Extract banner — only when profile empty */}
         {isProfileEmpty && (
           <motion.div

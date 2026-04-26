@@ -20,6 +20,7 @@ import Onboarding from "./pages/Onboarding";
 import { AuthProvider } from "./contexts/AuthContext";
 import RequireAuth from "./components/RequireAuth";
 import OnboardingGate from "./components/OnboardingGate";
+import AppShell from "./components/AppShell";
 import {
   MessageCircle, Map, Users, User, FileText,
 } from "lucide-react";
@@ -68,7 +69,7 @@ function BottomNav() {
   if (hideOn.includes(location)) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-border z-50 pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-border z-50 pb-[env(safe-area-inset-bottom)] lg:hidden">
       <div className="container max-w-2xl flex items-center justify-around h-16">
         {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = location === path;
@@ -135,7 +136,9 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <ScrollToTop />
-            <Router />
+            <AppShell>
+              <Router />
+            </AppShell>
             <BottomNav />
           </TooltipProvider>
         </AuthProvider>

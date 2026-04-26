@@ -106,14 +106,14 @@ export default function PostDetail() {
     <div className="min-h-screen bg-warm-cream pb-20">
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border">
         <div className="container flex items-center gap-3 h-14">
-          <button onClick={() => navigate("/hub")} className="text-muted-foreground hover:text-foreground">
+          <button onClick={() => navigate("/hub")} className="text-muted-foreground hover:text-foreground lg:hidden">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="font-[var(--font-display)] text-base text-earth-brown">Post</h1>
         </div>
       </header>
 
-      <div className="container max-w-2xl py-4 space-y-3">
+      <div className="container max-w-2xl lg:max-w-3xl py-4 space-y-3">
         {/* Post card */}
         <div className="bg-white rounded-2xl border border-border shadow-sm p-4">
           <div className="flex items-center justify-between mb-2">

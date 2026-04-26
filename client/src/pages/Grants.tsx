@@ -41,7 +41,7 @@ export default function Grants() {
         <div className="container flex items-center gap-3 h-14">
           <button
             onClick={() => navigate("/roadmap")}
-            className="p-2 rounded-xl hover:bg-muted transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="p-2 rounded-xl hover:bg-muted transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center lg:hidden"
             aria-label="Bumalik sa Roadmap"
           >
             <ArrowLeft className="w-5 h-5 text-foreground" />
@@ -62,7 +62,7 @@ export default function Grants() {
         </div>
       </header>
 
-      <div className="container max-w-2xl mt-4 space-y-4">
+      <div className="container max-w-2xl lg:max-w-3xl mt-4 space-y-4">
 
         {/* Eligibility summary — amber accent */}
         {eligibleCount > 0 && (

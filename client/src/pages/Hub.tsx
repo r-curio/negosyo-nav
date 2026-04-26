@@ -145,7 +145,7 @@ export default function Hub() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate("/")}
-              className="p-2 rounded-xl hover:bg-muted transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 rounded-xl hover:bg-muted transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center lg:hidden"
               aria-label="Bumalik"
             >
               <ArrowLeft className="w-5 h-5 text-foreground" />
@@ -195,7 +195,7 @@ export default function Hub() {
       </div>
 
       {/* Posts List */}
-      <div className="container max-w-2xl py-4 space-y-3 pb-24">
+      <div className="container max-w-2xl lg:max-w-3xl py-4 space-y-3 pb-24">
         <AnimatePresence>
           {filteredPosts.map((post, i) => {
             const style = CATEGORY_STYLES[post.category] || CATEGORY_STYLES.tip;

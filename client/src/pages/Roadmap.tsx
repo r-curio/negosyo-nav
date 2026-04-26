@@ -70,7 +70,7 @@ function ProgressCombined({
   const allDone = completedCount === totalSteps;
   return (
     <div className="sticky top-14 z-40 bg-warm-cream/95 backdrop-blur-md border-b border-border/50">
-      <div className="container max-w-2xl py-3">
+      <div className="container max-w-2xl lg:max-w-3xl py-3">
         <div className="bg-white rounded-2xl border border-border shadow-sm p-3.5">
           <div className="flex items-center justify-between gap-3 mb-2.5">
             <div className="flex-1 min-w-0">
@@ -149,7 +149,7 @@ function QuickActions({ navigate }: { navigate: (path: string) => void }) {
     },
   ];
   return (
-    <div className="container max-w-2xl mt-4">
+    <div className="container max-w-2xl lg:max-w-3xl mt-4">
       <p className="font-[var(--font-mono)] text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
         Tulong para sa Step na ito
       </p>
@@ -177,7 +177,7 @@ function QuickActions({ navigate }: { navigate: (path: string) => void }) {
 /* ─── Section divider with label ─── */
 function SectionDivider({ label }: { label: string }) {
   return (
-    <div className="container max-w-2xl mt-8 mb-3">
+    <div className="container max-w-2xl lg:max-w-3xl mt-8 mb-3">
       <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-border/60" />
         <span className="font-[var(--font-mono)] text-[10px] uppercase tracking-widest text-muted-foreground/70">
@@ -760,10 +760,10 @@ export default function Roadmap() {
     <div className="min-h-screen bg-warm-cream pb-32">
       {/* Top Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-border">
-        <div className="container max-w-2xl flex items-center gap-3 h-14">
+        <div className="container max-w-2xl lg:max-w-none flex items-center gap-3 h-14">
           <button
             onClick={() => navigate("/")}
-            className="p-2 rounded-xl hover:bg-muted active:bg-muted/80 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="p-2 rounded-xl hover:bg-muted active:bg-muted/80 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center lg:hidden"
             aria-label="Bumalik"
           >
             <ArrowLeft className="w-5 h-5 text-earth-brown" />
@@ -824,7 +824,7 @@ export default function Roadmap() {
 
       {/* ── Active Step ── */}
       {activeStep && (
-        <div className="container max-w-2xl mt-4">
+        <div className="container max-w-2xl lg:max-w-3xl mt-4">
           <div className="relative">
             <StepCard
               step={activeStep}
@@ -845,7 +845,7 @@ export default function Roadmap() {
 
       {/* All-done celebration */}
       {!activeStep && (
-        <div className="container max-w-2xl mt-6">
+        <div className="container max-w-2xl lg:max-w-3xl mt-6">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -863,7 +863,7 @@ export default function Roadmap() {
 
       {/* ── Remaining Steps ── */}
       <SectionDivider label="Lahat ng Hakbang" />
-      <div className="container max-w-2xl">
+      <div className="container max-w-2xl lg:max-w-3xl">
         <div className="relative">
           {remainingSteps.map((step) => {
             const i = step.step_number - 1;
@@ -893,7 +893,7 @@ export default function Roadmap() {
 
       {/* ── Grants teaser → /grants ── */}
       <SectionDivider label="Tulong-Pinansyal" />
-      <div className="container max-w-2xl">
+      <div className="container max-w-2xl lg:max-w-3xl">
         <button
           onClick={() => navigate("/grants")}
           className="w-full bg-gradient-to-r from-mango/20 to-mango-light rounded-2xl border border-mango/30 p-4 shadow-sm hover:shadow-md active:scale-[0.99] transition-all text-left"
@@ -917,7 +917,7 @@ export default function Roadmap() {
 
       {/* ── Rating ── */}
       {completedSteps.size >= 3 && (
-        <div className="container max-w-2xl mt-8">
+        <div className="container max-w-2xl lg:max-w-3xl mt-8">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl border border-border p-5 shadow-sm text-center">
             <h3 className="font-[var(--font-display)] text-sm font-bold text-earth-brown mb-1">Kumusta ang Lakad Roadmap?</h3>
             <p className="text-xs text-earth-brown/80 mb-4">
@@ -948,7 +948,7 @@ export default function Roadmap() {
       )}
 
       {/* ── Footer with Report issue ── */}
-      <footer className="container max-w-2xl mt-10 mb-4">
+      <footer className="container max-w-2xl lg:max-w-3xl mt-10 mb-4">
         <div className="border-t border-border/50 pt-4 flex flex-col items-center gap-2">
           <button
             onClick={() => setShowFeedback(true)}

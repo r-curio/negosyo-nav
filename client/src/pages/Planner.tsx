@@ -168,7 +168,7 @@ export default function Planner() {
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border">
         <div className="container flex items-center justify-between h-14">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/roadmap")} className="text-muted-foreground hover:text-foreground">
+            <button onClick={() => navigate("/roadmap")} className="text-muted-foreground hover:text-foreground lg:hidden">
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
@@ -185,7 +185,7 @@ export default function Planner() {
         </div>
       </header>
 
-      <div className="container max-w-2xl py-6 space-y-6">
+      <div className="container max-w-2xl lg:max-w-3xl py-6 space-y-6">
         {/* Time Selection */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
           <div className="flex items-center gap-2">

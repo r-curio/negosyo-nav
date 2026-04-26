@@ -170,7 +170,7 @@ export default function Home() {
             type="button"
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
-            className="-ml-2 inline-flex items-center justify-center h-11 w-11 rounded-lg text-earth-brown hover:bg-mango-light active:bg-mango-light transition-colors"
+            className="-ml-2 inline-flex items-center justify-center h-11 w-11 rounded-lg text-earth-brown hover:bg-mango-light active:bg-mango-light transition-colors lg:hidden"
           >
             <Menu className="w-5 h-5" />
           </button>
@@ -241,7 +241,7 @@ export default function Home() {
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto pb-40">
-        <div className="container max-w-2xl py-4 space-y-4">
+        <div className="container max-w-2xl lg:max-w-3xl py-4 space-y-4">
           <AnimatePresence>
             {messages.map((msg, i) => (
               <motion.div
@@ -318,8 +318,8 @@ export default function Home() {
       </div>
 
       {/* Sticky Chat Input */}
-      <div className="fixed bottom-16 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-border z-40">
-        <div className="container max-w-2xl py-3">
+      <div className="fixed bottom-16 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-border z-40 lg:bottom-0 lg:left-64">
+        <div className="container max-w-2xl lg:max-w-3xl py-3">
           {/* Quick suggestions — always visible, swap copy after first reply */}
           <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
             {(hasUserMessages ? FOLLOWUP_SUGGESTIONS : sampleUserMessages).map((msg) => (

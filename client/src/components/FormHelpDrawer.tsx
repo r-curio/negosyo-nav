@@ -88,12 +88,13 @@ export default function FormHelpDrawer({
           />
 
           {/* Drawer — z above BottomNav (z-50) so input bar isn't covered */}
+          <div className="fixed inset-0 z-[60] flex items-end justify-center lg:items-center pointer-events-none">
           <motion.div
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-[60] bg-white rounded-t-3xl shadow-2xl max-h-[80vh] flex flex-col pb-[env(safe-area-inset-bottom)]"
+            className="pointer-events-auto bg-white rounded-t-3xl shadow-2xl w-full max-h-[80vh] flex flex-col pb-[env(safe-area-inset-bottom)] lg:max-w-md lg:rounded-3xl lg:max-h-[70vh] lg:pb-4 lg:m-4"
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
@@ -200,6 +201,7 @@ export default function FormHelpDrawer({
               </Button>
             </form>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
