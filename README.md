@@ -35,7 +35,7 @@ The saved profile is the retention hook: it powers renewals, post-registration r
 
 - **Taglish AI intake** — Gemini conversation extracts business profile from natural code-switched Filipino/English.
 - **Lakad Roadmap** — 5-step Manila City registration path (DTI → Barangay → Cedula → Mayor's Permit → BIR) with per-step costs, document checklists, RDO routing, and embedded office maps.
-- **Auto-filled government PDFs** — the MVP anchor. The profile fills the real Manila Barangay Clearance AcroForm; DTI + BIR ship as text-fallback PDFs until official templates land.
+- **Auto-filled government PDFs** — the MVP anchor. We ran the scanned Manila Barangay Clearance through **Google Document AI** (Form Parser) to detect field regions and convert the flat PDF into a fillable AcroForm, then fill it from the profile with `pdf-lib`. DTI + BIR ship as text-fallback PDFs until those templates get the same Document AI pass.
 - **Grant matcher** — pure-logic eligibility for **BMBE, DOLE Kabuhayan, SB Corp Micro-Financing** based on the saved profile.
 - **Negosyante Hub** — community board with posts + upvotes, seeded with peer tips per registration step.
 - **Place finder** — Manila LGU offices with Google Maps integration, surfaced *inside* the roadmap step that needs them.
@@ -64,7 +64,8 @@ Single-process Express app. tRPC is the entire API surface — no REST, no OAuth
 ### Backend
 - **Node.js + Express** on **tRPC v11** — all sub-routers in `server/routers.ts` (~440 LOC, intentionally one file).
 - **firebase-admin** for token verification + Firestore access (`server/_core/firebaseAdmin.ts`, `server/db.ts`).
-- **pdf-lib + @pdf-lib/fontkit** — real PDF generation, AcroForm filling for Manila templates.
+- **Google Document AI (Form Parser)** — converts scanned government PDFs into AcroForms by detecting field bboxes and labels; output is a fillable template `pdf-lib` can write into.
+- **pdf-lib + @pdf-lib/fontkit** — fills the Document AI–generated AcroForms from the saved profile.
 - **Vitest** — tests build a `TrpcContext` and call `appRouter.createCaller(ctx)` directly (no HTTP).
 
 ### Data
@@ -76,7 +77,7 @@ Single-process Express app. tRPC is the entire API surface — no REST, no OAuth
 ## 🧗 The Hackathon Journey
 
 **Challenges we ran into**
-- **PDFs were the trap.** Our v1 "PDF download" was base64-encoded plain text saved with a `.pdf` extension — readers refused to open it. We rebuilt around `pdf-lib`, sourced the actual Manila Barangay Clearance AcroForm template, and added a real text-fallback PDF for templates we couldn't get in time.
+- **PDFs were the trap.** Our v1 "PDF download" was base64-encoded plain text saved with a `.pdf` extension — readers refused to open it. The real Manila Barangay Clearance only exists as a flat scan, so we ran it through **Google Document AI (Form Parser)** to extract field positions and rebuilt it as a true AcroForm, then filled it with `pdf-lib`. Templates we couldn't process in time fall back to a real text PDF.
 - **Single-LGU discipline.** We almost over-scoped to "all of Metro Manila" before realizing one perfectly accurate LGU beats five half-broken ones. We froze scope to **Manila City** and put multi-LGU in `docs/DEV_TASKS.md` for v2.
 - **Hub like-button bug at 2 AM.** Seeded posts had non-Firestore IDs, so `community.vote` 404'd. Tracked, fixed, documented as Track P.
 - **Mobile-first wasn't optional.** Our target user opens the app on a 360px screen with one thumb. Every layout got designed at 360×640 *first*, then scaled up.
@@ -165,7 +166,7 @@ negosyonav/
 │   ├── routers.ts          # ALL tRPC sub-routers in one file (auth/ai/profile/grants/community/forms/feedback)
 │   ├── db.ts               # Only allowed Firestore access path
 │   ├── pdf/                # barangayClearance.ts, textFallback.ts (pdf-lib)
-│   └── templates/          # Real government PDF templates (AcroForm)
+│   └── templates/          # Government PDFs converted to AcroForm via Google Document AI
 ├── shared/                 # const.ts, types.ts (imported by both client + server)
 ├── docs/DEV_TASKS.md       # Single source of truth for parallel work tracks
 └── CLAUDE.md               # Project guide for AI coding assistants
