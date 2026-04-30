@@ -69,53 +69,41 @@ function ProgressCombined({
   const completedCount = completedSteps.size;
   const allDone = completedCount === totalSteps;
   return (
-    <div className="sticky top-14 z-40 bg-warm-cream/95 backdrop-blur-md border-b border-border/50">
-      <div className="container max-w-2xl lg:max-w-3xl py-3">
-        <div className="bg-white rounded-2xl border border-border shadow-sm p-3.5">
+    <div className="sticky top-14 z-40 bg-warm-cream/95 backdrop-blur-md border-b border-border/40">
+      <div className="container max-w-2xl lg:max-w-3xl py-2.5">
+        <div className="bg-white rounded-2xl border border-border p-3.5" style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
           <div className="flex items-center justify-between gap-3 mb-2.5">
             <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-[var(--font-mono)] text-lg font-bold text-earth-brown">
-                  {completedCount}/{totalSteps}
-                </span>
-                <span className="text-[11px] text-muted-foreground font-[var(--font-mono)] uppercase tracking-wide">
-                  hakbang
-                </span>
-              </div>
-              <p className="font-[var(--font-mono)] text-[11px] text-earth-brown/80 mt-0.5 truncate">
-                {formatCurrency(remainingCost.min)}–{formatCurrency(remainingCost.max)} • {TOTAL_DAYS_ESTIMATE}
+              <p className="text-sm font-semibold text-earth-brown font-[var(--font-display)]">
+                {allDone ? "Lahat ng hakbang tapos na!" : firstIncompleteNumber
+                  ? `Hakbang ${firstIncompleteNumber} ng ${totalSteps}`
+                  : "Lakad Roadmap"}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {allDone
+                  ? "Mabuhay! Registered ka na. 🎉"
+                  : `${formatCurrency(remainingCost.min)}–${formatCurrency(remainingCost.max)} natitira · ${TOTAL_DAYS_ESTIMATE}`}
               </p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-mango-light flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-mango-light flex items-center justify-center shrink-0">
               {allDone ? (
-                <Sparkles className="w-5 h-5 text-mango" />
+                <Sparkles className="w-4 h-4 text-mango" />
               ) : (
-                <Coins className="w-5 h-5 text-mango" />
+                <Coins className="w-4 h-4 text-mango" />
               )}
             </div>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             {manilaData.registration_steps.map((step) => {
               const done = completedSteps.has(step.step_number);
               const isActive = firstIncompleteNumber === step.step_number;
               return (
-                <div key={step.step_number} className="flex-1 flex flex-col items-center gap-1">
+                <div key={step.step_number} className="flex-1">
                   <div
-                    className={`h-2 w-full rounded-full transition-all duration-500 ${
-                      done ? "bg-success" : isActive ? "bg-teal" : "bg-muted"
+                    className={`h-1.5 w-full rounded-full transition-all duration-500 ${
+                      done ? "bg-success" : isActive ? "bg-primary" : "bg-muted"
                     }`}
                   />
-                  <span
-                    className={`text-[9px] font-[var(--font-mono)] ${
-                      done
-                        ? "text-success"
-                        : isActive
-                          ? "text-teal font-bold"
-                          : "text-muted-foreground/50"
-                    }`}
-                  >
-                    {step.step_number}
-                  </span>
                 </div>
               );
             })}
@@ -175,16 +163,12 @@ function QuickActions({ navigate }: { navigate: (path: string) => void }) {
 }
 
 /* ─── Section divider with label ─── */
-function SectionDivider({ label }: { label: string }) {
+function SectionDivider({ label, sub }: { label: string; sub?: string }) {
   return (
-    <div className="container max-w-2xl lg:max-w-3xl mt-8 mb-3">
-      <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-border/60" />
-        <span className="font-[var(--font-mono)] text-[10px] uppercase tracking-widest text-muted-foreground/70">
-          {label}
-        </span>
-        <div className="h-px flex-1 bg-border/60" />
-      </div>
+    <div className="container max-w-2xl lg:max-w-3xl mt-10 mb-4">
+      <div className="h-px bg-border/50 mb-5" />
+      <p className="text-base font-semibold text-earth-brown font-[var(--font-display)]">{label}</p>
+      {sub && <p className="text-sm text-muted-foreground mt-0.5 leading-relaxed">{sub}</p>}
     </div>
   );
 }
@@ -281,11 +265,9 @@ function StepCard({
             <CheckCircle2 className="w-4 h-4 text-white" />
           </motion.div>
         ) : isActive ? (
-          <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
-            <div className={`w-6 h-6 rounded-full ${color.dot} flex items-center justify-center shadow-sm`}>
-              <span className="text-[10px] font-bold text-white font-[var(--font-mono)]">{step.step_number}</span>
-            </div>
-          </motion.div>
+          <div className={`w-6 h-6 rounded-full ${color.dot} flex items-center justify-center shadow-sm`}>
+            <span className="text-[10px] font-bold text-white font-[var(--font-mono)]">{step.step_number}</span>
+          </div>
         ) : isLocked ? (
           <div className="w-6 h-6 rounded-full border-2 border-muted-foreground/20 bg-muted/60 flex items-center justify-center">
             <Lock className="w-3 h-3 text-muted-foreground/50" aria-label="locked" />
@@ -298,39 +280,36 @@ function StepCard({
       </div>
 
       {/* Card */}
-      <div className={`ml-12 mb-5 ${isLocked && !isCompleted ? "opacity-60" : ""}`}>
+      <div className={`ml-12 mb-6 ${isLocked && !isCompleted ? "opacity-55" : ""}`}>
         <div
-          className={`rounded-2xl border overflow-hidden transition-all duration-200 ${
+          className={`rounded-2xl overflow-hidden transition-all duration-200 ${
             isCompleted
-              ? "bg-white/80 border-success/30 shadow-sm"
+              ? "bg-muted/60 border border-border/70"
               : isActive
-                ? `bg-white ${color.border} shadow-md ring-1 ring-teal/20`
-                : "bg-white border-border shadow-sm"
+                ? "bg-white"
+                : "bg-white border border-border"
           }`}
+          style={isActive && !isCompleted ? { boxShadow: "0 4px 20px rgba(0,0,0,0.09)" } : undefined}
         >
           {/* Status banner */}
           {isActive && !isCompleted && (
-            <div className={`${color.bg} px-4 py-1.5 flex items-center gap-2`}>
-              <motion.div
-                className={`w-1.5 h-1.5 rounded-full ${color.dot}`}
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-              />
-              <span className={`text-[10px] font-bold uppercase tracking-widest ${color.accent}`}>
-                Kasalukuyang Hakbang
+            <div className={`${color.bg} px-4 py-2 flex items-center gap-2`}>
+              <div className={`w-2 h-2 rounded-full ${color.dot} shrink-0`} />
+              <span className={`text-xs font-semibold ${color.accent}`}>
+                Dito tayo ngayon
               </span>
             </div>
           )}
           {isCompleted && (
-            <div className="bg-success/10 px-4 py-1.5 flex items-center gap-2">
-              <CheckCircle2 className="w-3 h-3 text-success" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-success">Tapos Na!</span>
+            <div className="bg-success/8 px-4 py-2 flex items-center gap-2">
+              <CheckCircle2 className="w-3.5 h-3.5 text-success" />
+              <span className="text-xs font-medium text-success">Natapos mo na ito</span>
             </div>
           )}
           {isLocked && !isCompleted && (
-            <div className="bg-muted px-4 py-1.5 flex items-center gap-2">
-              <Lock className="w-3 h-3 text-muted-foreground" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Naka-lock</span>
+            <div className="bg-muted/80 px-4 py-2 flex items-center gap-2">
+              <Lock className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Tapusin muna ang nauna</span>
             </div>
           )}
 
@@ -403,7 +382,13 @@ function StepCard({
             </div>
 
             {/* Title + agency */}
-            <h3 className={`font-[var(--font-display)] text-sm font-bold leading-snug ${isCompleted ? "text-muted-foreground" : "text-earth-brown"}`}>
+            <h3 className={`font-[var(--font-display)] leading-snug font-bold ${
+              isActive && !isCompleted
+                ? "text-base text-earth-brown"
+                : isCompleted
+                  ? "text-sm text-muted-foreground"
+                  : "text-sm text-earth-brown"
+            }`}>
               {step.title}
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">{step.agency}</p>
@@ -822,9 +807,18 @@ export default function Roadmap() {
         firstIncompleteNumber={firstIncomplete?.step_number}
       />
 
+      {/* ── Section intro ── */}
+      {activeStep && (
+        <div className="container max-w-2xl lg:max-w-3xl mt-5 mb-1">
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+            Lima lang ang hakbang. Isa-isa nating gagawin ito — simula sa pinakamadali.
+          </p>
+        </div>
+      )}
+
       {/* ── Active Step ── */}
       {activeStep && (
-        <div className="container max-w-2xl lg:max-w-3xl mt-4">
+        <div className="container max-w-2xl lg:max-w-3xl mt-3">
           <div className="relative">
             <StepCard
               step={activeStep}
@@ -862,7 +856,7 @@ export default function Roadmap() {
       {activeStep && <QuickActions navigate={navigate} />}
 
       {/* ── Remaining Steps ── */}
-      <SectionDivider label="Lahat ng Hakbang" />
+      <SectionDivider label="Lahat ng Hakbang" sub="Pag tapos ka sa aktibong hakbang, dito tayo pupunta." />
       <div className="container max-w-2xl lg:max-w-3xl">
         <div className="relative">
           {remainingSteps.map((step) => {
@@ -892,7 +886,7 @@ export default function Roadmap() {
       </div>
 
       {/* ── Grants teaser → /grants ── */}
-      <SectionDivider label="Tulong-Pinansyal" />
+      <SectionDivider label="Tulong-Pinansyal" sub="Baka may grant o programa para sa iyo." />
       <div className="container max-w-2xl lg:max-w-3xl">
         <button
           onClick={() => navigate("/grants")}

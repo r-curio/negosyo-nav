@@ -122,8 +122,8 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
@@ -165,21 +165,49 @@
 
   /* Primary action button — 56dp, Blue */
   .btn-primary-lakad {
-    @apply w-full h-14 rounded-xl bg-primary text-primary-foreground font-bold text-lg
+    @apply w-full h-14 rounded-xl bg-primary text-primary-foreground font-bold text-base
            flex items-center justify-center gap-2 shadow-sm
-           active:scale-[0.98] transition-all;
+           active:scale-[0.98] transition-all
+           focus-visible:ring-2 focus-visible:ring-primary/50;
     font-family: var(--font-display);
   }
 
-  /* Card — Design.md spec: 14px radius, 1px border, soft depth shadow */
+  /* Card — Guided Journey UI tiers */
   .negosyo-card {
-    @apply bg-card rounded-xl border border-border;
-    padding: 1rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    @apply bg-card rounded-2xl border border-border;
+    padding: 1.25rem;
     transition: box-shadow 0.2s ease;
   }
-  .negosyo-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  /* card-resting: bordered, no shadow — upcoming / neutral state */
+  .card-resting {
+    @apply bg-card rounded-2xl border border-border p-5;
+  }
+
+  /* card-active: elevated, no border — the one thing to focus on now */
+  .card-active {
+    @apply bg-card rounded-2xl p-5;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.09);
+  }
+
+  /* card-completed: flat muted background — done, recede */
+  .card-completed {
+    @apply bg-muted rounded-2xl border border-border p-4;
+    opacity: 0.82;
+  }
+
+  /* Section intro — calm lead-in before a content group */
+  .section-intro {
+    @apply mb-6;
+  }
+  .section-intro h2,
+  .section-intro-title {
+    @apply text-lg font-semibold text-foreground;
+    font-family: var(--font-display);
+  }
+  .section-intro p,
+  .section-intro-body {
+    @apply text-sm text-muted-foreground mt-1 leading-relaxed;
   }
 
   /* Brand gradient utilities — hero, CTA, highlights only */

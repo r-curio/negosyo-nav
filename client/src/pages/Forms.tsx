@@ -323,37 +323,50 @@ export default function Forms() {
             <ArrowLeft className="w-5 h-5 text-earth-brown" />
           </button>
           <div className="flex-1">
-            <h1 className="font-[var(--font-display)] text-sm text-earth-brown">Smart Form Auto-fill</h1>
-            <p className="text-[10px] text-muted-foreground font-[var(--font-mono)]">Review, edit, and download print-ready PDFs</p>
+            <h1 className="font-[var(--font-display)] text-sm font-bold text-earth-brown">I-fill out ang iyong mga Papeles</h1>
+            <p className="text-xs text-muted-foreground mt-0.5">Auto-fill mula sa profile mo — i-download bilang PDF.</p>
           </div>
         </div>
       </header>
 
-      <div className="container max-w-2xl lg:max-w-3xl mt-4 space-y-4">
+      <div className="container max-w-2xl lg:max-w-3xl mt-5 space-y-5">
+        {/* Inline chat help — no FAB overlap with content */}
+        <button
+          onClick={() => {
+            const expanded = forms.find(f => f.id === expandedForm);
+            setActiveFormName(expanded?.title ?? "");
+            formHelp.openGeneralHelp();
+          }}
+          className="w-full flex items-center gap-2 text-sm text-primary font-medium bg-primary/6 border border-primary/15 rounded-xl px-4 py-3 active:bg-primary/10 transition-colors min-h-[44px]"
+        >
+          <MessageCircle className="w-4 h-4 shrink-0" />
+          May tanong? Makipag-chat kay Nav
+        </button>
+
         {/* Profile status */}
         {!hasProfile ? (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-mango-light rounded-2xl border border-mango/30 p-4 shadow-sm">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-mango-light rounded-2xl border border-mango/30 p-5">
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-mango shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-[var(--font-display)] text-sm text-earth-brown">Complete your profile first</h3>
-                <p className="text-xs text-muted-foreground mt-1">Fill out your Negosyante Profile para ma-auto-fill ang forms.</p>
-                <Button onClick={() => navigate("/profile")} size="sm" className="mt-3 bg-mango hover:bg-mango/90 text-earth-brown rounded-xl font-[var(--font-display)] text-xs">
-                  <User className="w-4 h-4 mr-1" />Go to Profile
+                <h3 className="font-[var(--font-display)] text-sm font-semibold text-earth-brown">Kumpletuhin muna ang profile mo</h3>
+                <p className="text-sm text-muted-foreground mt-1 leading-relaxed">I-save ang iyong detalye sa profile para ma-auto-fill ang lahat ng forms nang walang paulit-ulit na pag-type.</p>
+                <Button onClick={() => navigate("/profile")} size="sm" className="mt-3 bg-mango hover:bg-mango/90 text-earth-brown rounded-xl font-[var(--font-display)] text-sm h-10">
+                  <User className="w-4 h-4 mr-1.5" />Pumunta sa Profile
                 </Button>
               </div>
             </div>
           </motion.div>
         ) : (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-teal-light rounded-2xl border border-teal/30 p-4 shadow-sm">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-primary/5 rounded-2xl border border-primary/20 p-4">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-5 h-5 text-teal shrink-0" />
-              <div className="flex-1">
-                <h3 className="font-[var(--font-display)] text-sm text-earth-brown">Profile loaded: {fullName}</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Forms are auto-filled from your profile. You can edit any field below.</p>
+              <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
+              <div className="flex-1 min-w-0">
+                <h3 className="font-[var(--font-display)] text-sm font-semibold text-earth-brown">Auto-fill na: {fullName}</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">Maaari mong i-edit ang anumang field bago i-download.</p>
               </div>
-              <Button onClick={() => navigate("/profile")} variant="outline" size="sm" className="rounded-xl border-teal/30 text-teal text-xs shrink-0">
-                <Edit3 className="w-3 h-3 mr-1" />Edit
+              <Button onClick={() => navigate("/profile")} variant="outline" size="sm" className="rounded-xl border-primary/20 text-primary text-xs shrink-0 h-9">
+                <Edit3 className="w-3 h-3 mr-1" />I-edit
               </Button>
             </div>
           </motion.div>
@@ -373,13 +386,15 @@ export default function Forms() {
               <button onClick={() => setExpandedForm(isExpanded ? null : form.id)} className="w-full text-left p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-[var(--font-mono)] font-semibold uppercase tracking-wider text-teal bg-teal/10 px-2 py-0.5 rounded-full">Step {form.step}</span>
-                      <span className={`text-[10px] font-[var(--font-mono)] px-2 py-0.5 rounded-full ${total > 0 && filled === total ? "text-success bg-success/10" : "text-mango bg-mango-light"}`}>
-                        {filled}/{total} filled
-                      </span>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs font-medium text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">Form {form.step} ng 3</span>
+                      {total > 0 && (
+                        <span className={`text-xs ${filled === total ? "text-success" : "text-muted-foreground"}`}>
+                          {filled === total ? "Kumpleto na" : `${filled} ng ${total} fields`}
+                        </span>
+                      )}
                     </div>
-                    <h3 className="font-[var(--font-display)] text-sm text-earth-brown leading-snug">{form.title}</h3>
+                    <h3 className="font-[var(--font-display)] text-sm font-semibold text-earth-brown leading-snug">{form.titleTl}</h3>
                     <p className="text-xs text-muted-foreground mt-0.5">{form.agency}</p>
                   </div>
                   <div className="shrink-0">
@@ -393,7 +408,7 @@ export default function Forms() {
                 {isExpanded && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                     <div className="px-4 pb-4 border-t border-border/50">
-                      <p className="text-xs text-muted-foreground mt-3 mb-4">{form.description}</p>
+                      <p className="text-sm text-muted-foreground mt-3 mb-5 leading-relaxed">{form.description}</p>
 
                       {isBarangayLoading ? (
                         <div className="flex items-center justify-center py-8">

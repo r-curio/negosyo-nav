@@ -9,7 +9,6 @@ import {
   FileText,
   Coins,
   Award,
-  ChevronDown,
   Sparkles,
   MessageCircle,
   Menu,
@@ -192,56 +191,46 @@ export default function Home() {
             <img
               src="https://d2xsxph8kpxj0f.cloudfront.net/310519663595373104/ZbKGxbkduWCL2xYHgfFPXg/hero-manila-street-jvEYVVKWcrpWYPWKF3uKev.webp"
               alt="Manila street scene with sari-sari stores and carinderia"
-              className="w-full h-56 sm:h-72 object-cover"
+              className="w-full h-52 sm:h-64 object-cover"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-warm-cream via-warm-cream/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-warm-cream via-warm-cream/70 to-transparent" />
           </div>
-          <div className="container relative -mt-20 pb-6">
+          <div className="container relative -mt-24 pb-8">
             <h1 className="font-[var(--font-display)] text-2xl sm:text-3xl text-earth-brown leading-tight">
-              Simulan ang iyong
+              Kumusta! Simulan natin
               <br />
-              <span className="text-teal">Lakad Roadmap</span>
+              <span className="text-teal">ang iyong Lakad Roadmap.</span>
             </h1>
-            <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-md leading-relaxed font-[var(--font-body)]">
-              I-describe mo lang ang iyong negosyo sa Taglish — at bibigyan ka
-              namin ng step-by-step guide para sa registration sa Manila.
+            <p className="mt-2 text-sm text-muted-foreground max-w-sm leading-relaxed">
+              Sabihin mo lang ang iyong negosyo sa Taglish — bibigyan kita ng
+              step-by-step guide para sa Manila registration.
             </p>
 
-            {/* Feature pills */}
-            <div className="flex flex-wrap gap-2 mt-4">
+            {/* Feature pills — horizontal, subtle */}
+            <div className="flex flex-wrap gap-2 mt-5">
               {[
-                { icon: FileText, label: "Documents" },
+                { icon: FileText, label: "Auto-fill Forms" },
                 { icon: Coins, label: "Cost Estimate" },
-                { icon: MapPin, label: "Office Locations" },
-                { icon: Award, label: "Grant Matching" },
+                { icon: MapPin, label: "Opisina Map" },
+                { icon: Award, label: "Grant Check" },
               ].map(({ icon: Icon, label }) => (
                 <span
                   key={label}
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-earth-brown bg-white border border-border px-3 py-1.5 rounded-full shadow-sm"
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground bg-white/80 border border-border/60 px-3 py-1.5 rounded-full"
                 >
-                  <Icon className="w-3.5 h-3.5 text-teal" />
+                  <Icon className="w-3 h-3 text-teal" />
                   {label}
                 </span>
               ))}
             </div>
-          </div>
-
-          {/* Scroll hint */}
-          <div className="flex justify-center pb-2">
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-            >
-              <ChevronDown className="w-5 h-5 text-muted-foreground" />
-            </motion.div>
           </div>
         </motion.section>
       )}
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto pb-40">
-        <div className="container max-w-2xl lg:max-w-3xl py-4 space-y-4">
+        <div className="container max-w-2xl lg:max-w-3xl py-4 space-y-6">
           <AnimatePresence>
             {messages.map((msg, i) => (
               <motion.div
@@ -320,19 +309,35 @@ export default function Home() {
       {/* Sticky Chat Input */}
       <div className="fixed bottom-16 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-border z-40 lg:bottom-0 lg:left-64">
         <div className="container max-w-2xl lg:max-w-3xl py-3">
-          {/* Quick suggestions — always visible, swap copy after first reply */}
-          <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
-            {(hasUserMessages ? FOLLOWUP_SUGGESTIONS : sampleUserMessages).map((msg) => (
-              <button
-                key={msg}
-                onClick={() => handleSend(msg)}
-                disabled={isTyping}
-                className="shrink-0 inline-flex items-center text-[11px] font-medium text-teal bg-teal-light border border-teal/20 px-2.5 py-1 rounded-full hover:bg-teal/20 transition-colors disabled:opacity-50"
-              >
-                {msg}
-              </button>
-            ))}
-          </div>
+          {/* Quick suggestions — vertical stack on first visit, horizontal on follow-up */}
+          {hasUserMessages ? (
+            <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+              {FOLLOWUP_SUGGESTIONS.map((msg) => (
+                <button
+                  key={msg}
+                  onClick={() => handleSend(msg)}
+                  disabled={isTyping}
+                  className="shrink-0 inline-flex items-center text-xs font-medium text-primary bg-primary/8 border border-primary/20 px-3 py-1.5 rounded-full active:bg-primary/15 transition-colors disabled:opacity-50"
+                >
+                  {msg}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 pb-1">
+              {sampleUserMessages.map((msg) => (
+                <button
+                  key={msg}
+                  onClick={() => handleSend(msg)}
+                  disabled={isTyping}
+                  className="w-full text-left inline-flex items-center text-sm font-medium text-earth-brown bg-white border border-border px-4 py-3 rounded-xl active:bg-muted transition-colors disabled:opacity-50 min-h-[44px]"
+                >
+                  <span className="text-teal mr-2 text-base leading-none">›</span>
+                  {msg}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Input bar */}
           <div className="flex items-end gap-1.5">
@@ -350,19 +355,19 @@ export default function Home() {
                   e.preventDefault();
                   handleSend();
                 }}
-                placeholder="I-describe ang iyong negosyo..."
+                placeholder={hasUserMessages ? "Mag-follow up..." : "Halimbawa: 'Sari-sari store sa Tondo, 5 years na'"}
                 aria-label="Chat message input"
                 enterKeyHint="send"
-                className="block w-full pl-8 pr-3 py-2 h-10 min-h-10 max-h-[120px] rounded-lg bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-teal/40 transition-all font-[var(--font-body)] resize-none overflow-y-auto leading-6"
+                className="block w-full pl-8 pr-3 py-3 h-12 min-h-12 max-h-[120px] rounded-xl bg-muted border border-transparent text-base focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/20 transition-all font-[var(--font-body)] resize-none overflow-y-auto leading-6"
               />
             </div>
             <Button
               onClick={() => handleSend()}
               disabled={!inputValue.trim() || isTyping}
-              aria-label="Send message"
-              className="bg-teal hover:bg-teal/90 text-white rounded-lg h-10 w-10 p-0 shrink-0 shadow-md"
+              aria-label="Ipadala"
+              className="bg-primary hover:bg-primary/90 active:scale-95 text-white rounded-xl h-12 w-12 p-0 shrink-0 shadow-sm transition-all"
             >
-              <Send className="w-3.5 h-3.5" />
+              <Send className="w-4 h-4" />
             </Button>
           </div>
         </div>
