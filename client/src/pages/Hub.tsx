@@ -573,7 +573,7 @@ export default function Hub() {
               )}
 
               {/* Post action footer */}
-              <div className="border-t border-border/50 px-4 py-3 shrink-0 space-y-2">
+              <div className="border-t border-border/50 px-4 py-6 shrink-0 space-y-2">
                 {(newTitle.trim().length > 0 && newTitle.trim().length < 5) && (
                   <p className="text-xs text-destructive text-center">Pamagat: kailangan ng hindi bababa sa 5 character</p>
                 )}
