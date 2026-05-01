@@ -26,7 +26,7 @@ type ChatMessage = { role: "user" | "assistant"; content: string };
 const WELCOME_MESSAGE: ChatMessage = {
   role: "assistant",
   content:
-    "Kumusta! Ako si Nav, ang iyong gabay sa business registration sa Manila.\n\nAnong negosyo ang plano mo? Sabihin mo lang — Taglish okay!",
+    "Kumusta! 👋 Ako si Nav — tutulungan kitang i-register ang iyong negosyo, from requirements hanggang permits.\n\nAnong business ang balak mong simulan? Sabihin mo lang, at gagawan kita ng step-by-step guide."
 };
 
 const FOLLOWUP_SUGGESTIONS = [
@@ -37,28 +37,28 @@ const FOLLOWUP_SUGGESTIONS = [
 
 const STARTER_CHIPS = [
   {
-    text: sampleUserMessages[0],
+    text: "Gusto kong magtayo ng carinderia sa Sampaloc. Ano yung mga kailangan na permits at magkano aabutin?",
     icon: UtensilsCrossed,
     label: "Carinderia sa Sampaloc",
     cls: "bg-orange-50 border-orange-200 text-orange-700",
     iconCls: "text-orange-500",
   },
   {
-    text: sampleUserMessages[1],
+    text: "Plano kong magbukas ng sari-sari store sa Tondo. Paano ako magsisimula at ano ang first step sa registration?",
     icon: ShoppingBag,
     label: "Sari-sari store sa Tondo",
     cls: "bg-teal-light border-teal/20 text-teal",
     iconCls: "text-teal",
   },
   {
-    text: sampleUserMessages[2],
+    text: "Mag-o-online selling ako from Ermita. Kailangan ko pa ba ng permit at paano yung process?",
     icon: Package,
     label: "Online selling sa Ermita",
     cls: "bg-forest-light border-forest/20 text-forest",
     iconCls: "text-forest",
   },
   {
-    text: sampleUserMessages[3],
+    text: "Balak kong mag-ukay-ukay sa Quiapo. Ano yung requirements at saan ako kukuha ng permit?",
     icon: Shirt,
     label: "Ukay-ukay sa Quiapo",
     cls: "bg-mango-light border-mango/20 text-mango",
