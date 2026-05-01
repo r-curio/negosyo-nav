@@ -301,6 +301,24 @@ export async function createCommunityPost(post: {
   return { id: ref.id };
 }
 
+export async function updateCommunityPost(
+  postId: string,
+  userId: string,
+  data: { title: string; content: string; category: string }
+): Promise<void> {
+  const ref = db().collection("community_posts").doc(postId);
+  const snap = await ref.get();
+  if (!snap.exists || snap.data()?.userId !== userId) throw new Error("Not authorized");
+  await ref.update({ title: data.title, content: data.content, category: data.category, updatedAt: FieldValue.serverTimestamp() });
+}
+
+export async function deleteCommunityPost(postId: string, userId: string): Promise<void> {
+  const ref = db().collection("community_posts").doc(postId);
+  const snap = await ref.get();
+  if (!snap.exists || snap.data()?.userId !== userId) throw new Error("Not authorized");
+  await ref.delete();
+}
+
 export async function voteOnPost(
   postId: string,
   userId: string,

@@ -26,6 +26,9 @@ import {
   X,
   Shield,
   User,
+  MoreVertical,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 
 const CATEGORIES = [
@@ -68,6 +71,9 @@ export default function Hub() {
   const [newContent, setNewContent] = useState("");
   const [newCategory, setNewCategory] = useState<"tip" | "warning" | "question" | "experience">("tip");
   const [newStepNumber, setNewStepNumber] = useState<number | "">("");
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [openMenuPostId, setOpenMenuPostId] = useState<string | null>(null);
+  const [confirmDeletePostId, setConfirmDeletePostId] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -85,20 +91,46 @@ export default function Hub() {
     return () => { document.body.style.overflow = prev; };
   }, [showCreateForm]);
 
+  useEffect(() => {
+    if (!openMenuPostId) return;
+    const close = () => { setOpenMenuPostId(null); setConfirmDeletePostId(null); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [openMenuPostId]);
+
   const { data: dbPosts, refetch } = trpc.community.list.useQuery({ lguTag: "manila_city" });
   const createPost = trpc.community.create.useMutation({
     onSuccess: () => {
       refetch();
-      setShowCreateForm(false);
-      setNewTitle("");
-      setNewContent("");
-      setNewStepNumber("");
+      closeModal();
       toast.success("Na-post na!");
     },
     onError: (err) => {
       toast.error(err.message || "Hindi na-post. Subukan muli.");
     },
   });
+  const updatePost = trpc.community.update.useMutation({
+    onSuccess: () => {
+      refetch();
+      closeModal();
+      toast.success("Na-update na ang post!");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Hindi na-update. Subukan muli.");
+    },
+  });
+  const deletePost = trpc.community.delete.useMutation({
+    onSuccess: () => {
+      refetch();
+      setConfirmDeletePostId(null);
+      setOpenMenuPostId(null);
+      toast.success("Na-delete na ang post.");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Hindi na-delete. Subukan muli.");
+    },
+  });
+
   const { data: myVotesData, refetch: refetchMyVotes } = trpc.community.myVotes.useQuery(undefined, {
     enabled: isAuthenticated,
   });
@@ -126,10 +158,32 @@ export default function Hub() {
     voteMutation.mutate({ postId, voteType });
   };
 
-  const handleCreatePost = () => {
+  const closeModal = () => {
+    setShowCreateForm(false);
+    setEditingPostId(null);
+    setNewTitle("");
+    setNewContent("");
+    setNewCategory("tip");
+    setNewStepNumber("");
+  };
+
+  const openEditModal = (post: typeof allPosts[0]) => {
+    setEditingPostId(post.id);
+    setNewTitle(post.title);
+    setNewContent(post.content);
+    setNewCategory(post.category);
+    setNewStepNumber(post.stepNumber ?? "");
+    setOpenMenuPostId(null);
+    setShowCreateForm(true);
+  };
+
+  const handleSubmitPost = () => {
     if (!isAuthenticated) { window.location.href = getLoginUrl(); return; }
-    if (!newTitle.trim() || !newContent.trim()) return;
-    createPost.mutate({ title: newTitle, content: newContent, category: newCategory, lguTag: "manila_city", stepNumber: typeof newStepNumber === "number" ? newStepNumber : undefined });
+    if (editingPostId) {
+      updatePost.mutate({ postId: editingPostId, title: newTitle, content: newContent, category: newCategory });
+    } else {
+      createPost.mutate({ title: newTitle, content: newContent, category: newCategory, lguTag: "manila_city", stepNumber: typeof newStepNumber === "number" ? newStepNumber : undefined });
+    }
   };
 
   const formatDate = (date: Date | string) => {
@@ -236,10 +290,8 @@ export default function Hub() {
                 <div className={`h-1 w-full ${accentBar}`} />
 
                 {/* Post header */}
-                <button
-                  onClick={() => navigate(`/hub/${post.id}`)}
-                  className="w-full text-left px-4 pt-4 pb-2"
-                >
+                <div className="px-4 pt-4 pb-2">
+                  {/* Author row */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
@@ -254,32 +306,81 @@ export default function Hub() {
                         <p className="text-xs text-muted-foreground">{formatDate(post.createdAt)}</p>
                       </div>
                     </div>
-                    <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${style.bg} ${style.text} border ${style.border}`}>
-                      <CategoryIcon className="w-3.5 h-3.5" />
-                      {post.category === "tip" && "Tip"}
-                      {post.category === "warning" && "Babala"}
-                      {post.category === "question" && "Tanong"}
-                      {post.category === "experience" && "Kwento"}
-                    </span>
-                  </div>
-
-                  {/* Fixer warning banner */}
-                  {post.category === "warning" && (
-                    <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-xl">
-                      <Shield className="w-4 h-4 text-destructive shrink-0" />
-                      <span className="text-xs font-bold text-destructive uppercase tracking-wide">
-                        Fixer Warning
+                    <div className="flex items-center gap-1.5">
+                      <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${style.bg} ${style.text} border ${style.border}`}>
+                        <CategoryIcon className="w-3.5 h-3.5" />
+                        {post.category === "tip" && "Tip"}
+                        {post.category === "warning" && "Babala"}
+                        {post.category === "question" && "Tanong"}
+                        {post.category === "experience" && "Kwento"}
                       </span>
+                      {post.userId === user?.uid && (
+                        <div className="relative">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setOpenMenuPostId(openMenuPostId === post.id ? null : post.id); setConfirmDeletePostId(null); }}
+                            className="p-1.5 rounded-full hover:bg-muted text-muted-foreground transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center"
+                          >
+                            <MoreVertical className="w-4 h-4" />
+                          </button>
+                          {openMenuPostId === post.id && (
+                            confirmDeletePostId === post.id ? (
+                              <div className="absolute right-0 top-9 z-20 bg-white border border-border rounded-xl shadow-lg p-3 w-44">
+                                <p className="text-xs font-semibold text-foreground mb-2.5 text-center">Burahin ang post?</p>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => { setConfirmDeletePostId(null); setOpenMenuPostId(null); }}
+                                    className="flex-1 h-8 rounded-lg text-xs font-semibold bg-muted text-foreground hover:bg-muted/80 transition-colors"
+                                  >Hindi</button>
+                                  <button
+                                    onClick={() => deletePost.mutate({ postId: post.id })}
+                                    disabled={deletePost.isPending}
+                                    className="flex-1 h-8 rounded-lg text-xs font-semibold bg-destructive text-white hover:bg-destructive/90 transition-colors disabled:opacity-50"
+                                  >{deletePost.isPending ? "..." : "Burahin"}</button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="absolute right-0 top-9 z-20 bg-white border border-border rounded-xl shadow-lg overflow-hidden w-36">
+                                <button
+                                  onClick={() => openEditModal(post)}
+                                  className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-foreground hover:bg-muted transition-colors text-left"
+                                >
+                                  <Pencil className="w-4 h-4 text-muted-foreground" />
+                                  I-edit
+                                </button>
+                                <button
+                                  onClick={() => setConfirmDeletePostId(post.id)}
+                                  className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors text-left"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                  Burahin
+                                </button>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      )}
                     </div>
-                  )}
-
-                  <h3 className="font-bold text-base text-foreground leading-snug mb-2 font-[var(--font-display)]">
-                    {post.title}
-                  </h3>
-                  <div className="text-sm text-muted-foreground leading-relaxed">
-                    <Streamdown>{post.content}</Streamdown>
                   </div>
-                </button>
+
+                  {/* Clickable body */}
+                  <button onClick={() => navigate(`/hub/${post.id}`)} className="w-full text-left">
+                    {/* Fixer warning banner */}
+                    {post.category === "warning" && (
+                      <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-xl">
+                        <Shield className="w-4 h-4 text-destructive shrink-0" />
+                        <span className="text-xs font-bold text-destructive uppercase tracking-wide">
+                          Fixer Warning
+                        </span>
+                      </div>
+                    )}
+                    <h3 className="font-bold text-base text-foreground leading-snug mb-2 font-[var(--font-display)]">
+                      {post.title}
+                    </h3>
+                    <div className="text-sm text-muted-foreground leading-relaxed">
+                      <Streamdown>{post.content}</Streamdown>
+                    </div>
+                  </button>
+                </div>
 
                 {/* Vote section */}
                 <div className="px-4 py-2 border-t border-border/50 flex items-center gap-4">
@@ -361,7 +462,7 @@ export default function Hub() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center px-4"
-            onClick={() => setShowCreateForm(false)}
+            onClick={closeModal}
           >
             <motion.div
               initial={{ scale: 0.96, opacity: 0 }}
@@ -374,13 +475,13 @@ export default function Hub() {
               {/* Header — close left, title center, spacer right */}
               <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-border/60 shrink-0">
                 <button
-                  onClick={() => setShowCreateForm(false)}
+                  onClick={closeModal}
                   className="p-2 rounded-full hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <X className="w-5 h-5 text-muted-foreground" />
                 </button>
                 <h2 className="font-bold text-base text-foreground font-[var(--font-display)]">
-                  Bagong Post
+                  {editingPostId ? "I-edit ang Post" : "Bagong Post"}
                 </h2>
                 <div className="min-w-[44px]" />
               </div>
@@ -480,12 +581,12 @@ export default function Hub() {
                   <p className="text-xs text-destructive text-center">Nilalaman: kailangan ng hindi bababa sa 10 character</p>
                 )}
                 <Button
-                  onClick={handleCreatePost}
-                  disabled={newTitle.trim().length < 5 || newContent.trim().length < 10 || createPost.isPending}
+                  onClick={handleSubmitPost}
+                  disabled={newTitle.trim().length < 5 || newContent.trim().length < 10 || createPost.isPending || updatePost.isPending}
                   className="w-full h-11 rounded-full text-white font-bold text-sm font-[var(--font-display)] border-0 disabled:opacity-40"
                   style={{ background: "linear-gradient(140deg, var(--color-brand-teal) 0%, var(--color-forest) 60%, oklch(0.22 0.08 255) 100%)" }}
                 >
-                  {createPost.isPending ? "Nagpo-post..." : "I-post"}
+                  {(createPost.isPending || updatePost.isPending) ? "Sandali lang..." : editingPostId ? "I-save" : "I-post"}
                 </Button>
               </div>
             </motion.div>
