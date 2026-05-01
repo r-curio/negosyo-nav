@@ -4,8 +4,8 @@ import { invokeLLM } from "./_core/llm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
-  getCommunityPosts, createCommunityPost, voteOnPost, getUserVotes,
-  getCommentsForPost, addCommentToPost,
+  getCommunityPosts, createCommunityPost, updateCommunityPost, deleteCommunityPost,
+  voteOnPost, getUserVotes, getCommentsForPost, addCommentToPost,
   createFeedback, getProfile, upsertProfile, upsertUser,
   getUserByUid, setOnboardingStep, markOnboardingComplete,
   getChatThread, listChatThreads, appendThreadMessages, deleteChatThread,
@@ -569,6 +569,29 @@ Mga patakaran sa sagot:
           ctx.user.name || "Anonymous Negosyante",
           input.body,
         );
+      }),
+
+    update: protectedProcedure
+      .input(z.object({
+        postId: z.string().min(1),
+        title: z.string().min(5).max(500),
+        content: z.string().min(10),
+        category: z.enum(["tip", "warning", "question", "experience"]),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await updateCommunityPost(input.postId, ctx.user.uid, {
+          title: input.title,
+          content: input.content,
+          category: input.category,
+        });
+        return { success: true } as const;
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ postId: z.string().min(1) }))
+      .mutation(async ({ ctx, input }) => {
+        await deleteCommunityPost(input.postId, ctx.user.uid);
+        return { success: true } as const;
       }),
   }),
 

@@ -69,7 +69,7 @@ function BottomNav() {
   if (hideOn.includes(location)) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-border z-50 pb-[env(safe-area-inset-bottom)] lg:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-border z-50 pb-[env(safe-area-inset-bottom)] lg:hidden">
       <div className="container max-w-2xl flex items-center justify-around h-16">
         {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = location === path;
@@ -79,18 +79,16 @@ function BottomNav() {
               onClick={() => navigate(path)}
               aria-label={label}
               aria-current={isActive ? "page" : undefined}
-              className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[48px] rounded-xl px-2 py-1 transition-colors ${
-                isActive
-                  ? "text-primary"
-                  : "text-muted-foreground"
+              className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[48px] rounded-xl px-2 py-1 transition-colors active:scale-95 ${
+                isActive ? "text-primary" : "text-muted-foreground"
               }`}
             >
-              <div className={`rounded-lg px-3 py-0.5 transition-colors ${
-                isActive ? "bg-forest-light" : ""
+              <div className={`rounded-xl px-3 py-1 transition-colors ${
+                isActive ? "bg-primary/10" : ""
               }`}>
                 <Icon className="w-5 h-5" />
               </div>
-              <span className={`text-[11px] font-semibold ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+              <span className={`text-[11px] ${isActive ? "font-bold text-primary" : "font-medium text-muted-foreground"}`}>
                 {label}
               </span>
             </button>

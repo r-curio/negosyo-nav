@@ -192,7 +192,7 @@ function SectionDivider({ label }: { label: string }) {
 /* ─── Step Card ─── */
 function StepCard({
   step, index, isCompleted, isActive, isLocked, checkedReqs,
-  onToggleReq, onMarkComplete, onLockedTap, profile, defaultExpanded,
+  onToggleReq, onMarkComplete, profile, defaultExpanded,
 }: {
   step: RegistrationStep;
   index: number;
@@ -202,7 +202,6 @@ function StepCard({
   checkedReqs: Set<string>;
   onToggleReq: (key: string) => void;
   onMarkComplete: () => void;
-  onLockedTap: () => void;
   profile: { bizBarangay?: string | null } | null;
   defaultExpanded?: boolean;
 }) {
@@ -241,10 +240,6 @@ function StepCard({
     : "Ipagpatuloy";
 
   function handleCardClick() {
-    if (isLocked && !isCompleted) {
-      onLockedTap();
-      return;
-    }
     setExpanded((v) => !v);
   }
 
@@ -438,7 +433,7 @@ function StepCard({
           )}
 
           {/* Non-active expand toggle */}
-          {!isActive && !isLocked && (
+          {!isActive && (
             <button
               onClick={() => setExpanded((v) => !v)}
               className="w-full flex items-center justify-center gap-1 pb-3 -mt-1"
@@ -835,7 +830,6 @@ export default function Roadmap() {
               checkedReqs={checkedReqs}
               onToggleReq={toggleReq}
               onMarkComplete={() => markStepComplete(activeStep.step_number)}
-              onLockedTap={() => handleLockedTap(activeStep.step_number)}
               profile={profile ?? null}
               defaultExpanded={false}
             />
@@ -883,7 +877,6 @@ export default function Roadmap() {
                 checkedReqs={checkedReqs}
                 onToggleReq={toggleReq}
                 onMarkComplete={() => markStepComplete(step.step_number)}
-                onLockedTap={() => handleLockedTap(step.step_number)}
                 profile={profile ?? null}
               />
             );

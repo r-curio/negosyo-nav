@@ -174,6 +174,17 @@ Web Speech API (`SpeechRecognition`, `lang="fil-PH"` with `en-PH` fallback). Mic
 
 Applied Design.md ("Bayanihan Modernism") system-wide. No logic changes.
 
+### Track R3 — Guided Journey UI Refactor — ✅ done 2026-05-01
+**Owner files:** `client/src/index.css`, `client/src/pages/Home.tsx`, `client/src/pages/Roadmap.tsx`, `client/src/pages/Forms.tsx`, `client/src/App.tsx`.
+
+DESIGN.md updated from "Soft Analytics UI" to "Guided Journey UI" (Headspace-inspired). No logic changes — layout, spacing, hierarchy, microcopy only.
+
+- R3.1 `index.css`: body font-size 14→15px, line-height 1.6→1.65; `.negosyo-card` now `rounded-2xl p-5`; added `.card-resting` / `.card-active` / `.card-completed` tier classes; added `.section-intro` / `.section-intro-title` / `.section-intro-body` pattern; `.btn-primary-lakad` gains `focus-visible:ring`. — ✅ done 2026-05-01
+- R3.2 `Home.tsx`: Hero microcopy rewritten (warmer Taglish); feature pills toned down; chat `space-y-4`→`space-y-6`; suggestion chips vertical stack on first visit / horizontal pills on follow-up; input placeholder context-aware; send button uses `bg-primary` (blue), `h-12 w-12 rounded-xl`. — ✅ done 2026-05-01
+- R3.3 `Roadmap.tsx`: Progress header simplified (plain text step label + dots-only bar, no font-mono uppercase); section intro added before active step; active card elevated via `box-shadow` (no border+ring); completed cards `bg-muted/60` + no shadow; status banner animated dot removed — static dot; active step title `text-sm`→`text-base`; `SectionDivider` refactored from line–dash–line to clean section header with optional subtitle; call sites pass `sub` prop. — ✅ done 2026-05-01
+- R3.4 `Forms.tsx`: Header copy "Smart Form Auto-fill" → Taglish ("I-fill out ang iyong mga Papeles"); step badge `text-[10px] font-mono`→`text-xs`; fill progress badge→plain text; profile status cards use warmer Taglish copy + `bg-primary/5` for loaded state; form title shows Tagalog `titleTl`; inline ghost help button added at top (reduces FAB overlap with sticky input); expanded description `text-xs`→`text-sm leading-relaxed`; card spacing `space-y-4`→`space-y-5`. — ✅ done 2026-05-01
+- R3.5 `App.tsx` BottomNav: `bg-forest-light`→`bg-primary/10` (consistent blue system); nav `bg-white`→`bg-white/95 backdrop-blur-sm`; active label `font-semibold`→`font-bold`; `active:scale-95` on buttons. — ✅ done 2026-05-01
+
 ### Track R2 — Soft Analytics UI Refactor — ✅ done 2026-04-26
 **Owner files:** `client/src/index.css`, `client/src/pages/Home.tsx`.
 
