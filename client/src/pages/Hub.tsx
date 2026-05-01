@@ -328,11 +328,11 @@ export default function Hub() {
                                 <p className="text-xs font-semibold text-foreground mb-2.5 text-center">Burahin ang post?</p>
                                 <div className="flex gap-2">
                                   <button
-                                    onClick={() => { setConfirmDeletePostId(null); setOpenMenuPostId(null); }}
+                                    onClick={(e) => { e.stopPropagation(); setConfirmDeletePostId(null); setOpenMenuPostId(null); }}
                                     className="flex-1 h-8 rounded-lg text-xs font-semibold bg-muted text-foreground hover:bg-muted/80 transition-colors"
                                   >Hindi</button>
                                   <button
-                                    onClick={() => deletePost.mutate({ postId: post.id })}
+                                    onClick={(e) => { e.stopPropagation(); deletePost.mutate({ postId: post.id }); }}
                                     disabled={deletePost.isPending}
                                     className="flex-1 h-8 rounded-lg text-xs font-semibold bg-destructive text-white hover:bg-destructive/90 transition-colors disabled:opacity-50"
                                   >{deletePost.isPending ? "..." : "Burahin"}</button>
@@ -341,14 +341,14 @@ export default function Hub() {
                             ) : (
                               <div className="absolute right-0 top-9 z-20 bg-white border border-border rounded-xl shadow-lg overflow-hidden w-36">
                                 <button
-                                  onClick={() => openEditModal(post)}
+                                  onClick={(e) => { e.stopPropagation(); openEditModal(post); }}
                                   className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-foreground hover:bg-muted transition-colors text-left"
                                 >
                                   <Pencil className="w-4 h-4 text-muted-foreground" />
                                   I-edit
                                 </button>
                                 <button
-                                  onClick={() => setConfirmDeletePostId(post.id)}
+                                  onClick={(e) => { e.stopPropagation(); setConfirmDeletePostId(post.id); }}
                                   className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors text-left"
                                 >
                                   <Trash2 className="w-4 h-4" />
