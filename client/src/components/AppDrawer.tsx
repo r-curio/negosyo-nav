@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Plus,
-  MessageCircle,
+  Sparkles,
   Map as MapIcon,
   FileText,
   Users,
@@ -33,7 +33,7 @@ type Props = {
 };
 
 const NAV_ITEMS: Array<{ to: string; label: string; icon: React.ComponentType<{ className?: string }> }> = [
-  { to: "/", label: "Chat", icon: MessageCircle },
+  { to: "/", label: "Chat", icon: Sparkles },
   { to: "/roadmap", label: "Lakad Roadmap", icon: MapIcon },
   { to: "/forms", label: "Forms", icon: FileText },
   { to: "/hub", label: "Negosyante Hub", icon: Users },

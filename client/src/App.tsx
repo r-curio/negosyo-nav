@@ -22,7 +22,7 @@ import RequireAuth from "./components/RequireAuth";
 import OnboardingGate from "./components/OnboardingGate";
 import AppShell from "./components/AppShell";
 import {
-  MessageCircle, Map, Users, User, FileText,
+  Sparkles, Map, Users, User, FileText,
 } from "lucide-react";
 
 function Router() {
@@ -58,7 +58,7 @@ function BottomNav() {
   const [location, navigate] = useLocation();
 
   const navItems = [
-    { path: "/", icon: MessageCircle, label: "Chat" },
+    { path: "/", icon: Sparkles, label: "Chat" },
     { path: "/roadmap", icon: Map, label: "Roadmap" },
     { path: "/forms", icon: FileText, label: "Forms" },
     { path: "/hub", icon: Users, label: "Hub" },
@@ -84,11 +84,19 @@ function BottomNav() {
               }`}
             >
               <div className={`rounded-xl px-3 py-1 transition-colors ${
-                isActive ? "bg-primary/10" : ""
+                isActive && path !== "/" ? "bg-primary/10" : isActive ? "bg-amber-100/60" : ""
               }`}>
-                <Icon className="w-5 h-5" />
+                {path === "/" ? (
+                  <Icon className="w-5 h-5 text-amber-500" style={{ fill: "currentColor" }} />
+                ) : (
+                  <Icon className="w-5 h-5" />
+                )}
               </div>
-              <span className={`text-[11px] ${isActive ? "font-bold text-primary" : "font-medium text-muted-foreground"}`}>
+              <span className={`text-[11px] ${
+                isActive && path === "/" ? "font-bold text-amber-500"
+                : isActive ? "font-bold text-primary"
+                : "font-medium text-muted-foreground"
+              }`}>
                 {label}
               </span>
             </button>

@@ -16,7 +16,7 @@ import { getLoginUrl } from "@/const";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, FileText, CheckCircle2, AlertCircle, User, Loader2,
-  ChevronDown, ChevronUp, Edit3, MessageCircle,
+  ChevronDown, ChevronUp, Edit3, Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import FormHelpDrawer from "@/components/FormHelpDrawer";
@@ -337,9 +337,10 @@ export default function Forms() {
             setActiveFormName(expanded?.title ?? "");
             formHelp.openGeneralHelp();
           }}
-          className="w-full flex items-center gap-2 text-sm text-primary font-medium bg-primary/6 border border-primary/15 rounded-xl px-4 py-3 active:bg-primary/10 transition-colors min-h-[44px]"
+          className="w-full flex items-center gap-2 text-sm text-white font-medium rounded-xl px-4 py-3 hover:opacity-90 active:scale-[0.98] transition-all min-h-[44px]"
+          style={{ background: "linear-gradient(140deg, var(--color-brand-teal) 0%, var(--color-forest) 60%, oklch(0.22 0.08 255) 100%)" }}
         >
-          <MessageCircle className="w-4 h-4 shrink-0" />
+          <Sparkles className="w-4 h-4 shrink-0 text-amber-300" style={{ fill: "currentColor" }} />
           May tanong? Makipag-chat kay Nav
         </button>
 
@@ -449,11 +450,12 @@ export default function Forms() {
             setActiveFormName(expanded?.title ?? "");
             formHelp.openGeneralHelp();
           }}
-          className="fixed bottom-20 right-4 w-14 h-14 bg-teal text-white rounded-full shadow-lg flex items-center justify-center z-30 hover:bg-teal/90 transition-colors"
+          className="fixed bottom-20 right-4 w-14 h-14 rounded-full shadow-lg flex items-center justify-center z-30 hover:opacity-90 active:scale-95 transition-all"
+          style={{ background: "linear-gradient(140deg, var(--color-brand-teal) 0%, var(--color-forest) 60%, oklch(0.22 0.08 255) 100%)" }}
           aria-label="Kausapin si NegosyoNav"
           title="Kausapin si NegosyoNav"
         >
-          <MessageCircle className="w-6 h-6" />
+          <Sparkles className="w-6 h-6 text-amber-300" style={{ fill: "currentColor" }} />
         </motion.button>
       )}
 

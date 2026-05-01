@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Streamdown } from "streamdown";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { X, Send, Loader2, MessageCircle, HelpCircle } from "lucide-react";
+import { X, Send, Loader2, Sparkles, HelpCircle } from "lucide-react";
 import type { FormHelpMessage } from "@/hooks/useFormHelp";
 
 interface FormHelpDrawerProps {
@@ -123,7 +123,7 @@ export default function FormHelpDrawer({
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
               {history.length === 0 && (
                 <div className="text-center py-4">
-                  <MessageCircle className="w-8 h-8 text-teal/40 mx-auto mb-2" />
+                  <Sparkles className="w-8 h-8 text-amber-400 mx-auto mb-2" style={{ fill: "currentColor" }} />
                   <p className="text-xs text-muted-foreground">
                     {isGeneral
                       ? "Magtanong tungkol sa forms, registration, grants, o kahit anong NegosyoNav topic!"

@@ -164,7 +164,8 @@ export default function Hub() {
               if (!isAuthenticated) { window.location.href = getLoginUrl(); return; }
               setShowCreateForm(true);
             }}
-            className="bg-primary hover:bg-primary/90 text-white text-sm font-bold px-4 h-10 rounded-full font-[var(--font-display)]"
+            className="text-white text-sm font-bold px-4 h-10 rounded-full font-[var(--font-display)] hover:opacity-90 active:scale-95 transition-all border-0"
+            style={{ background: "linear-gradient(140deg, var(--color-brand-teal) 0%, var(--color-forest) 60%, oklch(0.22 0.08 255) 100%)" }}
           >
             <MessageSquarePlus className="w-4 h-4 mr-1.5" />
             Mag-post
@@ -320,7 +321,8 @@ export default function Hub() {
                 if (!isAuthenticated) { window.location.href = getLoginUrl(); return; }
                 setShowCreateForm(true);
               }}
-              className="bg-primary hover:bg-primary/90 text-white rounded-full font-[var(--font-display)]"
+              className="text-white rounded-full font-[var(--font-display)] hover:opacity-90 active:scale-95 transition-all border-0"
+              style={{ background: "linear-gradient(140deg, var(--color-brand-teal) 0%, var(--color-forest) 60%, oklch(0.22 0.08 255) 100%)" }}
             >
               <MessageSquarePlus className="w-4 h-4 mr-2" />
               Mag-post Ngayon

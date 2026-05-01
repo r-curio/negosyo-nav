@@ -23,9 +23,9 @@ import { trpc } from "@/lib/trpc";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, MapPin, Clock, FileText, ChevronDown, ChevronUp, ExternalLink,
-  CheckCircle2, Coins, Award, Lightbulb, Building2, ShieldCheck,
+  CheckCircle2, Coins, Award, Lightbulb, ShieldCheck,
   BadgeCheck, Flag, X, Send, SquareCheck, Square, Star,
-  CalendarDays, Navigation, Lock, Globe, Phone, ArrowRight, PlayCircle, Sparkles,
+  CalendarDays, Navigation, Lock, Globe, ArrowRight, PlayCircle, Sparkles,
   LayoutGrid,
 } from "lucide-react";
 import { manilaData, type RegistrationStep } from "@/data/manilaData";
@@ -176,7 +176,7 @@ function SectionDivider({ label, sub }: { label: string; sub?: string }) {
 /* ─── Step Card ─── */
 function StepCard({
   step, index, isCompleted, isActive, isLocked, checkedReqs,
-  onToggleReq, onMarkComplete, onLockedTap, profile, defaultExpanded,
+  onToggleReq, onMarkComplete, profile, defaultExpanded,
 }: {
   step: RegistrationStep;
   index: number;
@@ -186,7 +186,6 @@ function StepCard({
   checkedReqs: Set<string>;
   onToggleReq: (key: string) => void;
   onMarkComplete: () => void;
-  onLockedTap: () => void;
   profile: { bizBarangay?: string | null } | null;
   defaultExpanded?: boolean;
 }) {
@@ -225,10 +224,6 @@ function StepCard({
     : "Ipagpatuloy";
 
   function handleCardClick() {
-    if (isLocked && !isCompleted) {
-      onLockedTap();
-      return;
-    }
     setExpanded((v) => !v);
   }
 
@@ -280,7 +275,7 @@ function StepCard({
       </div>
 
       {/* Card */}
-      <div className={`ml-12 mb-6 ${isLocked && !isCompleted ? "opacity-55" : ""}`}>
+      <div className="ml-12 mb-6">
         <div
           className={`rounded-2xl overflow-hidden transition-all duration-200 ${
             isCompleted
@@ -423,7 +418,7 @@ function StepCard({
           )}
 
           {/* Non-active expand toggle */}
-          {!isActive && !isLocked && (
+          {!isActive && (
             <button
               onClick={() => setExpanded((v) => !v)}
               className="w-full flex items-center justify-center gap-1 pb-3 -mt-1"
@@ -829,7 +824,6 @@ export default function Roadmap() {
               checkedReqs={checkedReqs}
               onToggleReq={toggleReq}
               onMarkComplete={() => markStepComplete(activeStep.step_number)}
-              onLockedTap={() => handleLockedTap(activeStep.step_number)}
               profile={profile ?? null}
               defaultExpanded={false}
             />
@@ -877,7 +871,6 @@ export default function Roadmap() {
                 checkedReqs={checkedReqs}
                 onToggleReq={toggleReq}
                 onMarkComplete={() => markStepComplete(step.step_number)}
-                onLockedTap={() => handleLockedTap(step.step_number)}
                 profile={profile ?? null}
               />
             );

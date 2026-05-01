@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import {
-  MessageCircle,
+  Sparkles,
   Map,
   FileText,
   Users,
@@ -19,7 +19,7 @@ type NavItem = {
 };
 
 const PRIMARY: NavItem[] = [
-  { path: "/", icon: MessageCircle, label: "Chat" },
+  { path: "/", icon: Sparkles, label: "Chat" },
   { path: "/roadmap", icon: Map, label: "Roadmap" },
   { path: "/forms", icon: FileText, label: "Forms" },
   { path: "/hub", icon: Users, label: "Hub" },

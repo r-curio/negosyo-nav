@@ -35,7 +35,6 @@ import {
   CheckCircle2,
   Loader2,
   Sparkles,
-  MessageCircle,
   LogOut,
   MoreVertical,
   Info,
@@ -539,7 +538,7 @@ export default function Profile() {
                   {extracting ? (
                     <><Loader2 className="w-3 h-3 mr-1 animate-spin" />Extracting…</>
                   ) : (
-                    <><MessageCircle className="w-3 h-3 mr-1" />Extract from Chat</>
+                    <><Sparkles className="w-3 h-3 mr-1 text-amber-500" style={{ fill: "currentColor" }} />Extract from Chat</>
                   )}
                 </Button>
               </div>
