@@ -388,10 +388,10 @@ export default function Forms() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-medium text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">Form {form.step} ng 3</span>
+                      <span className="text-[10px] font-[var(--font-mono)] font-semibold uppercase tracking-wider text-teal bg-teal/10 px-2 py-0.5 rounded-full">Step {form.step}</span>
                       {total > 0 && (
-                        <span className={`text-xs ${filled === total ? "text-success" : "text-muted-foreground"}`}>
-                          {filled === total ? "Kumpleto na" : `${filled} ng ${total} fields`}
+                        <span className={`text-[10px] font-[var(--font-mono)] px-2 py-0.5 rounded-full ${total > 0 && filled === total ? "text-success bg-success/10" : "text-mango bg-mango-light"}`}>
+                          {filled}/{total} filled
                         </span>
                       )}
                     </div>
