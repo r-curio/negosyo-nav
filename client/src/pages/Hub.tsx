@@ -10,6 +10,7 @@ import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import { Streamdown } from "streamdown";
 import {
   ArrowLeft,
@@ -23,8 +24,8 @@ import {
   HelpCircle,
   Star,
   X,
-  Send,
   Shield,
+  User,
 } from "lucide-react";
 
 const CATEGORIES = [
@@ -59,7 +60,7 @@ const CATEGORY_ACCENT: Record<string, string> = {
 
 export default function Hub() {
   const [, navigate] = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -92,6 +93,10 @@ export default function Hub() {
       setNewTitle("");
       setNewContent("");
       setNewStepNumber("");
+      toast.success("Na-post na!");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Hindi na-post. Subukan muli.");
     },
   });
   const { data: myVotesData, refetch: refetchMyVotes } = trpc.community.myVotes.useQuery(undefined, {
@@ -164,11 +169,10 @@ export default function Hub() {
               if (!isAuthenticated) { window.location.href = getLoginUrl(); return; }
               setShowCreateForm(true);
             }}
-            className="text-white text-sm font-bold px-4 h-10 rounded-full font-[var(--font-display)] hover:opacity-90 active:scale-95 transition-all border-0"
+            className="text-white h-10 w-10 rounded-full font-[var(--font-display)] hover:opacity-90 active:scale-95 transition-all border-0 flex items-center justify-center p-0"
             style={{ background: "linear-gradient(140deg, var(--color-brand-teal) 0%, var(--color-forest) 60%, oklch(0.22 0.08 255) 100%)" }}
           >
-            <MessageSquarePlus className="w-4 h-4 mr-1.5" />
-            Mag-post
+            <MessageSquarePlus className="w-4 h-4" />
           </Button>
         </div>
       </header>
@@ -195,8 +199,26 @@ export default function Hub() {
         </div>
       </div>
 
+      {/* Compose prompt card */}
+      <div className="container max-w-2xl lg:max-w-3xl pt-4 pb-2">
+        <button
+          onClick={() => {
+            if (!isAuthenticated) { window.location.href = getLoginUrl(); return; }
+            setShowCreateForm(true);
+          }}
+          className="w-full bg-white rounded-2xl border border-border shadow-sm px-4 py-3 flex items-center gap-3 hover:bg-muted/40 active:scale-[0.99] transition-all text-left"
+        >
+          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
+            <User className="w-5 h-5 text-primary" />
+          </div>
+          <span className="flex-1 text-sm text-muted-foreground/70 font-[var(--font-body)]">
+            Ano ang nasa isip mo, {user?.displayName?.split(" ")[0] ?? "Negosyante"}?
+          </span>
+        </button>
+      </div>
+
       {/* Posts List */}
-      <div className="container max-w-2xl lg:max-w-3xl py-4 space-y-3 pb-24">
+      <div className="container max-w-2xl lg:max-w-3xl py-2 space-y-3 pb-24">
         <AnimatePresence>
           {filteredPosts.map((post, i) => {
             const style = CATEGORY_STYLES[post.category] || CATEGORY_STYLES.tip;
@@ -338,85 +360,134 @@ export default function Hub() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-black/50 flex items-end sm:items-center justify-center"
+            className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center px-4"
             onClick={() => setShowCreateForm(false)}
           >
             <motion.div
-              initial={{ y: 80, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 80, opacity: 0 }}
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl p-5 max-h-[85dvh] overflow-y-auto overscroll-contain"
+              className="bg-white w-full max-w-lg rounded-2xl max-h-[88dvh] min-h-[72dvh] flex flex-col overscroll-contain shadow-xl"
             >
-              <div className="flex items-center justify-between mb-5">
-                <h2 className="font-bold text-lg text-foreground font-[var(--font-display)]">
-                  Mag-share sa Hub
-                </h2>
+              {/* Header — close left, title center, spacer right */}
+              <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-border/60 shrink-0">
                 <button
                   onClick={() => setShowCreateForm(false)}
-                  className="p-2 rounded-xl hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="p-2 rounded-full hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <X className="w-5 h-5 text-muted-foreground" />
                 </button>
+                <h2 className="font-bold text-base text-foreground font-[var(--font-display)]">
+                  Bagong Post
+                </h2>
+                <div className="min-w-[44px]" />
               </div>
 
-              {/* Category selector */}
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Uri ng Post</p>
-              <select
-                value={newCategory}
-                onChange={(e) => {
-                  const v = e.target.value as "tip" | "warning" | "question" | "experience";
-                  setNewCategory(v);
-                  if (v !== "warning") setNewStepNumber("");
-                }}
-                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-primary/40 mb-5 font-[var(--font-body)]"
-              >
-                <option value="tip">Tip</option>
-                <option value="warning">Babala</option>
-                <option value="question">Tanong</option>
-                <option value="experience">Kwento</option>
-              </select>
+              {/* Composer body */}
+              <div className="flex-1 overflow-y-auto flex flex-col">
+                {/* Author row */}
+                <div className="flex items-start gap-3 px-4 pt-4 pb-2">
+                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 mt-0.5">
+                    <User className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0 pt-1">
+                    <p className="text-sm font-bold text-foreground font-[var(--font-display)] leading-none mb-2">
+                      {user?.displayName ?? "Negosyante"}
+                    </p>
+                    {/* Inline category pills */}
+                    <div className="flex gap-1.5 flex-wrap">
+                      {(["tip", "warning", "question", "experience"] as const).map((cat) => {
+                        const isSelected = newCategory === cat;
+                        const style = CATEGORY_STYLES[cat];
+                        const Icon = CATEGORY_ICONS[cat];
+                        const label = { tip: "Tip", warning: "Babala", question: "Tanong", experience: "Kwento" }[cat];
+                        return (
+                          <button
+                            key={cat}
+                            type="button"
+                            onClick={() => {
+                              setNewCategory(cat);
+                              if (cat !== "warning") setNewStepNumber("");
+                            }}
+                            className={`flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-all ${
+                              isSelected
+                                ? `${style.bg} ${style.text} ${style.border}`
+                                : "bg-muted text-muted-foreground border-transparent hover:border-border"
+                            }`}
+                          >
+                            <Icon className="w-3 h-3" />
+                            {label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
 
+                {/* Title — borderless, auto-grows with content */}
+                <div className="px-4 pb-1">
+                  <textarea
+                    value={newTitle}
+                    onChange={(e) => {
+                      setNewTitle(e.target.value);
+                      e.target.style.height = "auto";
+                      e.target.style.height = e.target.scrollHeight + "px";
+                    }}
+                    placeholder="Ano ang paksa ng post mo?"
+                    rows={1}
+                    className="w-full text-[17px] font-semibold text-foreground placeholder:text-muted-foreground/50 bg-transparent border-none focus:outline-none resize-none leading-snug overflow-hidden"
+                  />
+                </div>
+
+                {/* Content — borderless textarea, stretches to fill space */}
+                <div className="flex-1 flex flex-col px-4 pb-2 min-h-0">
+                  <textarea
+                    value={newContent}
+                    onChange={(e) => setNewContent(e.target.value)}
+                    placeholder="I-share ang iyong experience, tip, o tanong para sa kapwa Negosyante..."
+                    className="flex-1 w-full text-sm text-foreground placeholder:text-muted-foreground/45 bg-transparent border-none focus:outline-none resize-none leading-relaxed"
+                  />
+                </div>
+              </div>
+
+              {/* Step tag — only for Babala */}
               {newCategory === "warning" && (
-                <select
-                  value={newStepNumber}
-                  onChange={(e) => setNewStepNumber(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:ring-2 focus:ring-teal/40 mb-3 font-[var(--font-body)]"
-                >
-                  <option value="">Walang step tag (general)</option>
-                  <option value={1}>Step 1 — DTI Business Name</option>
-                  <option value={2}>Step 2 — Barangay Clearance</option>
-                  <option value={3}>Step 3 — Cedula</option>
-                  <option value={4}>Step 4 — Mayor's Permit</option>
-                  <option value={5}>Step 5 — BIR Registration</option>
-                </select>
+                <div className="border-t border-border/50 px-4 py-3 shrink-0">
+                  <p className="text-[11px] font-semibold text-muted-foreground mb-2">I-tag ang registration step (optional)</p>
+                  <select
+                    value={newStepNumber}
+                    onChange={(e) => setNewStepNumber(e.target.value ? Number(e.target.value) : "")}
+                    className="w-full px-3 py-2.5 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 font-[var(--font-body)]"
+                  >
+                    <option value="">Walang step tag (general)</option>
+                    <option value={1}>Step 1 — DTI Business Name</option>
+                    <option value={2}>Step 2 — Barangay Clearance</option>
+                    <option value={3}>Step 3 — Cedula</option>
+                    <option value={4}>Step 4 — Mayor's Permit</option>
+                    <option value={5}>Step 5 — BIR Registration</option>
+                  </select>
+                </div>
               )}
 
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Title</p>
-              <input
-                type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="Ano ang title ng post mo?"
-                className="w-full px-4 h-14 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-primary/40 mb-4"
-              />
-
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Mensahe</p>
-              <textarea
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
-                placeholder="I-share ang iyong experience, tip, o tanong..."
-                rows={5}
-                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-base focus:outline-none focus:ring-2 focus:ring-primary/40 mb-5 resize-none"
-              />
-              <Button
-                onClick={handleCreatePost}
-                disabled={!newTitle.trim() || !newContent.trim() || createPost.isPending}
-                className="w-full h-14 bg-primary hover:bg-primary/90 text-white font-bold text-base rounded-xl font-[var(--font-display)]"
-              >
-                <Send className="w-5 h-5 mr-2" />
-                {createPost.isPending ? "Nagpo-post..." : "I-post sa Hub"}
-              </Button>
+              {/* Post action footer */}
+              <div className="border-t border-border/50 px-4 py-3 shrink-0 space-y-2">
+                {(newTitle.trim().length > 0 && newTitle.trim().length < 5) && (
+                  <p className="text-xs text-destructive text-center">Pamagat: kailangan ng hindi bababa sa 5 character</p>
+                )}
+                {(newContent.trim().length > 0 && newContent.trim().length < 10) && (
+                  <p className="text-xs text-destructive text-center">Nilalaman: kailangan ng hindi bababa sa 10 character</p>
+                )}
+                <Button
+                  onClick={handleCreatePost}
+                  disabled={newTitle.trim().length < 5 || newContent.trim().length < 10 || createPost.isPending}
+                  className="w-full h-11 rounded-full text-white font-bold text-sm font-[var(--font-display)] border-0 disabled:opacity-40"
+                  style={{ background: "linear-gradient(140deg, var(--color-brand-teal) 0%, var(--color-forest) 60%, oklch(0.22 0.08 255) 100%)" }}
+                >
+                  {createPost.isPending ? "Nagpo-post..." : "I-post"}
+                </Button>
+              </div>
             </motion.div>
           </motion.div>
         )}
